@@ -1,7 +1,7 @@
 # Adaptive HVAC
 Source code for the adaptive HVAC senior design project. This software is designed to be used on a raspberry pi microcontroller. 
 
-## Requirements
+## Hardware Requirements
 - Raspberry Pi 4 Model B
 - Raspberry Pi Camera Module v2
 - Raspberry Pi Touch Display
@@ -11,5 +11,18 @@ Source code for the adaptive HVAC senior design project. This software is design
 - Adafruit BME280 Temperature Sensor
 - Motion Sensor (HC-SR501)
 
+## Software Requirements
+- Python 3
+- pip
+- 
+
+## Installing Dependancies
+
+TODO
+
 ## Running the Code
+
+### Step 1
+
+### Step 2
 

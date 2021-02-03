@@ -1,6 +1,9 @@
 # thermostat.py
 # written by Harrison Noble
 
+import gui.gui
+import sensors
+
 def start():
     '''Entry function for the thermostat'''
     pass
