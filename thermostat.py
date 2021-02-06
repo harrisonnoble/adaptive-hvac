@@ -1,12 +1,16 @@
 # thermostat.py
 # written by Harrison Noble
 
-import gui.gui as gui
+from gui.Gui import GUI
 #import sensors
 
 def start():
-    gui.start_gui()
-    pass
+    '''Function to start execution of the thermostat.
+    Creates and starts the main loop of the user interface'''
+
+    app = GUI()
+    app.title('Thermostat')
+    app.mainloop()
 
 # begin execution of the thermostat program
 if __name__ == '__main__':

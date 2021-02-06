@@ -5,31 +5,31 @@ from gui.Dashboard import Dashboard
 from gui.Settings import Settings
 import tkinter as tk
 
-class Gui(tk.Frame):
-    def __init__(self, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
-        p1 = Dashboard(self)
-        p2 = Settings(self)
+class GUI(tk.Tk):  
 
-        buttonframe = tk.Frame(self)
-        container = tk.Frame(self)
-        buttonframe.pack(side="top", fill="x", expand=False)
-        container.pack(side="top", fill="both", expand=True)
+	def __init__(self, *args, **kwargs):  
+		tk.Tk.__init__(self, *args, **kwargs)
+		#tk.Tk.iconbitmap(self,default="ico_image.ico")  
 
-        p1.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-        p2.place(in_=container, x=0, y=0, relwidth=1, relheight=1)        
+		container = tk.Frame(self)  
+		tk.Tk.geometry(self,'250x250')  
+		container.pack(side='top', fill='both', expand = True )     
+		container.grid_rowconfigure(0, weight = 1)
+		container.grid_columnconfigure(0, weight = 1)
 
-        b1 = tk.Button(buttonframe, text="Page 1", command=p1.lift)
-        b2 = tk.Button(buttonframe, text="Page 2", command=p2.lift)        
+		self.frame = {}
 
-        b1.pack(side="left")
-        b2.pack(side="left")        
+		for F in (Dashboard, Settings):
+			frame = F(container, self)
+			self.frame[F] = frame
+			frame.grid(row = 0, column = 0, sticky = "nsew") 
 
-        p1.show()
+		self.show_dashboard()
 
-def start_gui():
-    root = tk.Tk()
-    main = Gui(root)
-    main.pack(side="top", fill="both", expand=True)
-    root.wm_geometry("400x400")
-    root.mainloop()
+	def show_dashboard(self):
+		frame = self.frame[Dashboard]    
+		frame.tkraise()
+	
+	def show_settings(self): 
+		frame = self.frame[Settings] 
+		frame.tkraise()
