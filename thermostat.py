@@ -1,11 +1,11 @@
 # thermostat.py
 # written by Harrison Noble
 
-import gui.gui
-import sensors
+import gui.gui as gui
+#import sensors
 
 def start():
-    '''Entry function for the thermostat'''
+    gui.start_gui()
     pass
 
 # begin execution of the thermostat program
