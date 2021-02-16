@@ -2,16 +2,20 @@
 # written by Harrison Noble
 
 from gui.Gui import GUI
-#import sensors
 
-def start():
-    '''Function to start execution of the thermostat.
-    Creates and starts the main loop of the user interface'''
+class Thermostat:
+    def __init__(self):
+        self.app = GUI(self)
+        self.app.title('Thermostat')
 
-    app = GUI()
-    app.title('Thermostat')
-    app.mainloop()
+    def start(self):
+        '''Function to start execution of the thermostat.
+        Starts the main loop of the user interface'''
+
+        self.app.mainloop()
+
 
 # begin execution of the thermostat program
 if __name__ == '__main__':
-    start()
+    thermo = Thermostat()
+    thermo.start()
