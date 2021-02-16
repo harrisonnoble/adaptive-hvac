@@ -2,10 +2,6 @@
 # written by Harrison Noble
 
 from gui.Gui import GUI
-# from sensors.Camera import Camera
-# from sensors.MotionSensor import MotionSensor
-# from sensors.TempSensor import TempSensor
-# from sensors.ThermCamera import ThermalCamera
 import sensors.Sensors as sensors
 
 class Thermostat:
