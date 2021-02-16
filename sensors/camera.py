@@ -1,4 +1,4 @@
-# camera.py
+# Camera.py
 # written by Harrison Noble
 
 import io
