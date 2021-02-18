@@ -4,6 +4,7 @@
 #import utils.bme280 as bme
 
 class TempSensor:
+	'''Temerature sensor class to interface with BME 280 temperature sensor'''
 
 # --------------------- Init Function  ---------------------  
 

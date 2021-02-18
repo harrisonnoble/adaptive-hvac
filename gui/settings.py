@@ -6,7 +6,9 @@ from time import strftime
 import os
 
 class Settings(tk.Frame): 
-	'''Settings description'''
+	'''Settings class handles all administrative aspects of the thermostat
+	including power, rebooting, sensor readings and max/min temperature
+	operation ranges.'''
 
 # --------------------- Init Function  ---------------------   
 
@@ -16,7 +18,7 @@ class Settings(tk.Frame):
 		self.config(bg='#121212')
 
 		#initialize thermostat in order to run functions
-		self.thermostat = thermostat
+		self._thermostat = thermostat
 
 		#layout management
 		for i in range(0, 4):
@@ -34,21 +36,21 @@ class Settings(tk.Frame):
 
 		#create label for the time
 		self.time_label = tk.Label(self, font=('calibri', 35),
-									background='#121212',
-									foreground='white')
+									bg='#121212', fg='white')
 
 		#create label to display current temperature
-		self.curr_temp_lbl = tk.Label(self, font=('calibri', 35), bg='#121212', fg='white')
-		self.curr_temp = 0
+		self.curr_temp = self._thermostat.curr_temp
+		self.curr_temp_lbl = tk.Label(self, font=('calibri', 35),
+									bg='#121212', fg='white')
 
 		#display all components
 		self.toggle_btn.grid(column=0, row=0, sticky='nw', padx=10, pady=5)
 		self.time_label.grid(column=1, row=0, sticky='new', columnspan=2, pady=5)
 		self.curr_temp_lbl.grid(column=3, row=0, sticky='ne', padx=10, pady=5)
 		
-		#call the update time function
+		#call the update functions
 		self.update_time()
-		self.update_curr_temp(0)
+		self.update_curr_temp()
 
 # --------------------- End Init Function  ---------------------
 
@@ -60,9 +62,10 @@ class Settings(tk.Frame):
 		self.time_label.config(text=t)
 		self.time_label.after(30000, self.update_time)
 
-	def update_curr_temp(self, temp):
+	def update_curr_temp(self):
 		'''Function to update current temperature label'''
-		self.curr_temp = temp
+		self.curr_temp = self._thermostat.curr_temp
 		self.curr_temp_lbl.config(text=str(self.curr_temp) + '°')
+		self.curr_temp_lbl.after(10000, self.update_curr_temp)
 
 # --------------------- End Helper Functions  ---------------------

@@ -6,7 +6,8 @@ from gui.Settings import Settings
 import tkinter as tk
 
 class GUI(tk.Tk): 
-	'''GUI Description'''
+	'''GUI class handles the creation and toggling between the settings page 
+	and dashboard page. This is the parent class for both pages.'''
 
 # --------------------- Init Function  ---------------------   
 
@@ -21,9 +22,8 @@ class GUI(tk.Tk):
 		container.grid_rowconfigure(0, weight = 1)
 		container.grid_columnconfigure(0, weight = 1)
 
-		self.frame = {}
-
 		#create the dashboard and settings page and store in frame
+		self.frame = {}
 		for F in (Dashboard, Settings):
 			frame = F(container, self, thermostat)
 			self.frame[F] = frame
