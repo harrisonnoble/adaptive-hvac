@@ -5,11 +5,20 @@ import tkinter as tk
 from time import strftime
 import os
 
-class Settings(tk.Frame):    
+class Settings(tk.Frame): 
+	'''Settings description'''
 
-	def __init__(self, parent, controller):
-		tk.Frame.__init__(self, parent)
+# --------------------- Init Function  ---------------------   
+
+	def __init__(self, parent, controller, thermostat):
+		#initialization for frame object (dashboard UI)
+		tk.Frame.__init__(self, parent)   
 		self.config(bg='#121212')
+
+		#initialize thermostat in order to run functions
+		self.thermostat = thermostat
+
+		#layout management
 		for i in range(0, 4):
 			self.rowconfigure(i, weight=1)
 			self.columnconfigure(i, weight=1, min='200')
@@ -23,19 +32,37 @@ class Settings(tk.Frame):
 		self.toggle_btn = tk.Label(self, image=self.image, borderwidth=0)
 		self.toggle_btn.bind('<Button-1>', lambda e: controller.show_dashboard())
 
+		#create label for the time
 		self.time_label = tk.Label(self, font=('calibri', 35),
 									background='#121212',
 									foreground='white')
 
+		#create label to display current temperature
+		self.curr_temp_lbl = tk.Label(self, font=('calibri', 35), bg='#121212', fg='white')
+		self.curr_temp = 0
+
 		#display all components
 		self.toggle_btn.grid(column=0, row=0, sticky='nw', padx=10, pady=5)
-		self.time_label.grid(column=1, row=0, sticky='new', columnspan=2)
+		self.time_label.grid(column=1, row=0, sticky='new', columnspan=2, pady=5)
+		self.curr_temp_lbl.grid(column=3, row=0, sticky='ne', padx=10, pady=5)
 		
 		#call the update time function
 		self.update_time()
+		self.update_curr_temp(0)
+
+# --------------------- End Init Function  ---------------------
+
+# --------------------- Helper Functions  ---------------------
 
 	def update_time(self):
 		'''Function to update the displayed time every 30 seconds'''
 		t = strftime('%-I:%M %p')
 		self.time_label.config(text=t)
 		self.time_label.after(30000, self.update_time)
+
+	def update_curr_temp(self, temp):
+		'''Function to update current temperature label'''
+		self.curr_temp = temp
+		self.curr_temp_lbl.config(text=str(self.curr_temp) + '°')
+
+# --------------------- End Helper Functions  ---------------------

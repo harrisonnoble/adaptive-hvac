@@ -22,12 +22,11 @@ class Camera:
 
 	def detect_people(self):
 		'''Function to determine number of people in the room'''
-		
+
 		pass
 		
 	def get_num_people(self):
 		'''Function that returns number of people in the room'''
-
 		self.detect_people()
 		return self.num_people
 
