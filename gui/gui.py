@@ -18,7 +18,7 @@ class GUI(tk.Tk):
 		tk.Tk.geometry(self,'800x480')
 
 		# formatting for the window
-		container.pack(side='top', fill='both', expand = True)     
+		container.pack(side='top', fill='both', expand = True) 
 		container.grid_rowconfigure(0, weight = 1)
 		container.grid_columnconfigure(0, weight = 1)
 
