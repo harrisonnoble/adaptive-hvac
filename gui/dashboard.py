@@ -14,73 +14,104 @@ class Dashboard(tk.Frame):
 
 	def __init__(self, parent, controller, thermostat):
 		#initialization for frame object (dashboard UI)
-		tk.Frame.__init__(self, parent)   
+		tk.Frame.__init__(self, parent)
 		self.config(bg='#121212')
+
+		#get current path
+		curr_path = os.path.dirname(os.path.realpath(__file__))
 
 		#initialize thermostat in order to run functions
 		self._thermostat = thermostat
 
 		#layout management
 		for i in range(0, 4):
-			self.rowconfigure(i, weight=3)
-			self.columnconfigure(i, weight=3, min='200')
+			self.rowconfigure(i, weight=1)
+			self.columnconfigure(i, weight=1, min='200')
 
-		#get images
-		curr_path = os.path.dirname(os.path.realpath(__file__))
-		self.image = tk.PhotoImage(file=curr_path + '/imgs/settings.png')
-		self.image = self.image.subsample(4, 4)
-		self.bg = tk.PhotoImage(file=curr_path + '/imgs/bg.png')
-		self.bg = self.bg.subsample(1, 1)
-
-		#create a label with the settings image and bind show_settings function
-		self.toggle_btn = tk.Label(self, image=self.image, borderwidth=0)
-		self.toggle_btn.bind('<Button-1>', lambda e: controller.show_settings())
-
-		#create label for the time
+		#create top row (time and settings toggle) and display items
+		#--------------------------------------------
 		self.time_lbl = tk.Label(self, font=('calibri', 35),
 								bg='#121212', fg='white')
 
-		#create temperature increment / decrement buttons
-		self.temp_down = tk.Label(self, font=('calibri', 35),
-								bg='#121212', fg='white', text='-')
-		self.temp_down.bind('<Button-1>', lambda e: self.dec_temp())
+		self.settings = tk.PhotoImage(file=curr_path + '/imgs/settings.png').subsample(4,4)
+		self.toggle_btn = tk.Label(self, image=self.settings, borderwidth=0)
+		self.toggle_btn.bind('<Button-1>', lambda e: controller.show_settings())
 
-		self.temp_up = tk.Label(self, font=('calibri', 35),
-								bg='#121212', fg='white', text='+')
-		self.temp_up.bind('<Button-1>', lambda e: self.inc_temp())
+		self.time_lbl.grid(column=1, row=0, sticky='new', columnspan=2, pady=5)
+		self.toggle_btn.grid(column=3, row=0, sticky='ne', padx=10, pady=5)
+		#--------------------------------------------
 
-		#create variables for temperature
-		self.bg_img = tk.Label(self, image=self.bg, borderwidth=0)
+		#create left side of dashboard and display items
+		#--------------------------------------------
+		self.left = tk.Frame(self)
+		self.left.config(bg='#121212')
+		self.left.grid(row=1, column=0, rowspan=3, sticky='nesw')
+		self.left.rowconfigure((0, 1, 2, 3, 4), weight=1, min='30')
+		self.left.columnconfigure(0, weight=1, min='200')
+
+		self.mode_lbl = tk.Label(self.left, text='Mode', font=('calibri', 12),
+								bg='#525252', fg='white')
+		self.fan_lbl = tk.Label(self.left, text='Fan', font=('calibri', 12),
+								bg='#525252', fg='white')
+		self.system_lbl = tk.Label(self.left, text='System', font=('calibri', 12),
+								bg='#525252', fg='white')
+
+		self.mode_lbl.grid(row=0, column=0, sticky='n', ipadx=10)
+		self.fan_lbl.grid(row=2, column=0, sticky='n', ipadx=10)
+		self.system_lbl.grid(row=4, column=0, sticky='n', ipadx=10)
+		#--------------------------------------------
+
+		#create middle of dashboard
+		#--------------------------------------------
+		#configuring middle frame
+		self.middle = tk.Frame(self)
+		self.middle.config(bg='#121212')
+		self.middle.grid(row=1, column=1, columnspan=2, rowspan=3, sticky='nesw')
+		self.middle.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+		self.middle.columnconfigure((0, 1, 2), weight=1)
+
+		#background image for current temperature display
+		self.bg = tk.PhotoImage(file=curr_path + '/imgs/bg.png')
+		self.bg = self.bg.subsample(1, 1)
+
+		#create variables for temperature labels and temperature measurements
+		self.bg_img = tk.Label(self.middle, image=self.bg, borderwidth=0)
 		self.curr_temp = self._thermostat.curr_temp
-		self.curr_temp_lbl2 = tk.Label(self, font=('calibri', 16),
+		self.curr_temp_lbl2 = tk.Label(self.middle, font=('calibri', 16),
 										bg='#525252', fg='white',
-										text='\n\n\n\n\nCurrent Temp')
-		self.curr_temp_lbl = tk.Label(self, font=('calibri', 40),
+										text='Current Temp')
+		self.curr_temp_lbl = tk.Label(self.middle, font=('calibri', 40),
 										bg='#525252', fg='white',
 										text=str(self.curr_temp) + '°')
 
 		self.desired_temp = self._thermostat.desired_temp
-		self.desired_temp_lbl = tk.Label(self, font=('calibri', 30), 
+		self.desired_temp_lbl = tk.Label(self.middle, font=('calibri', 30), 
 										bg='#121212', fg='white', 
 										text=str(self.desired_temp) + '°')
-		self.desired_temp_lbl2 = tk.Label(self, font=('calibri', 14), 
+		self.desired_temp_lbl2 = tk.Label(self.middle, font=('calibri', 14), 
 										bg='#121212', fg='white', 
-										text='Desired Temp')								
+										text='Desired Temp')
 
-		#display all components
-		self.time_lbl.grid(column=1, row=0, sticky='new', columnspan=2, pady=5)
+		#temperature increment / decrement buttons
+		self.temp_down = tk.Label(self.middle, font=('calibri', 35),
+								bg='#121212', fg='white', text='-')
+		self.temp_down.bind('<Button-1>', lambda e: self.dec_temp())
 
-		self.toggle_btn.grid(column=3, row=0, sticky='ne', padx=10, pady=5)
+		self.temp_up = tk.Label(self.middle, font=('calibri', 35),
+								bg='#121212', fg='white', text='+')
+		self.temp_up.bind('<Button-1>', lambda e: self.inc_temp())								
 
-		self.curr_temp_lbl.grid(column=1, row=1, columnspan=2)
-		self.curr_temp_lbl2.grid(column=1, row=1, columnspan=2)
-		self.bg_img.grid(column=1, row=1, columnspan=2)
+		#display middle components
+		self.curr_temp_lbl.grid(column=0, row=1, columnspan=3)
+		self.curr_temp_lbl2.grid(column=0, row=2, columnspan=3, sticky='n')
+		self.bg_img.grid(column=0, row=0, columnspan=3, rowspan=3)
 
-		self.desired_temp_lbl.grid(column=1, row=2, columnspan=2)
-		self.desired_temp_lbl2.grid(column=1, row=2, columnspan=2, sticky='s')
+		self.temp_down.grid(column=0, row=3, sticky='se')
+		self.desired_temp_lbl.grid(column=1, row=3, sticky='s')
+		self.temp_up.grid(column=2, row=3, sticky='sw')
 
-		self.temp_down.grid(column=1, row=2)
-		self.temp_up.grid(column=2, row=2)
+		self.desired_temp_lbl2.grid(column=1, row=4, sticky='n')
+		#--------------------------------------------
 
 		#call functions to update values
 		self.update_time()
