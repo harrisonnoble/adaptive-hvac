@@ -57,11 +57,12 @@ class Dashboard(tk.Frame):
 
 		#create labels for variables, variable descriptions, and backgrounds
 		self.mode_bg = tk.Label(self.left, bg='#525252', width=12)
+		self.mode_bg.bind('<Button-1>', lambda e: self.change_mode())
 		self.mode_lbl = tk.Label(self.left, text='Mode', font=('calibri', 12),
 								bg='#525252', fg='white')
 		self.mode_stng = tk.Label(self.left, font=('calibri', 14),
 								bg='#525252', text=self.mode,
-								fg='#ff1212' if self.mode == 'Heat' else '#084eff')
+								fg='#ff1212' if self.mode == 'Heat' else '#0062ff')
 		
 		self.fan_bg = tk.Label(self.left, bg='#525252', width=12)
 		self.fan_lbl = tk.Label(self.left, text='Fan', font=('calibri', 12),
@@ -168,5 +169,9 @@ class Dashboard(tk.Frame):
 	def dec_temp(self):
 		self.desired_temp = self._thermostat.dec_desired_temp()
 		self.desired_temp_lbl.config(text=str(self.desired_temp) + '°')
+
+	def change_mode(self):
+		self.mode = self._thermostat.switch_mode()
+		self.mode_stng.config(text=self.mode, fg='#ff1212' if self.mode == 'Heat' else '#0062ff')
 
 # --------------------- End Helper Functions  ---------------------

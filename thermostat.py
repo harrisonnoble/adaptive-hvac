@@ -127,8 +127,6 @@ class Thermostat:
         '''Toggles system between 'Adaptive' and 'Manual' modes and returns value'''
         self._system = 'Adaptive' if self._system == 'Manual' else 'Manual'
     
-
-
 # --------------------- End Helper Functions  ---------------------  
 
 # --------------------- Entry Point  ---------------------  

@@ -43,7 +43,8 @@ class Settings(tk.Frame):
 		#create label to display current temperature
 		self.curr_temp = self._thermostat.curr_temp
 		self.curr_temp_lbl = tk.Label(self, font=('calibri', 35),
-									bg='#121212', fg='white')
+									bg='#121212', fg='white',
+									text=str(self.curr_temp) + '°')
 
 		#display all components in top row
 		self.toggle_btn.grid(column=0, row=0, sticky='nw', padx=10, pady=5)
@@ -58,9 +59,10 @@ class Settings(tk.Frame):
 		self.left.config(bg='#525252')
 		self.left.grid(row=1, column=0, rowspan=3, columnspan = 2, 
 						sticky='nesw', pady=(0, 20), padx=(15, 5))
-		self.left.rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+		self.left.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
 		self.left.columnconfigure((0, 1), weight=1)
 
+		#create toggle buttons between sensors and camera
 		self.sensor_btn = tk.Label(self.left, text='Sensors', font=('calibri', 15),
 									bg='#cdcdcd', fg='#353535')
 		self.sensor_btn.bind('<Button-1>', lambda e: self.toggle_sensor_cam('Sensor'))
@@ -68,16 +70,47 @@ class Settings(tk.Frame):
 									bg='#353535', fg='#cdcdcd')
 		self.camera_btn.bind('<Button-1>', lambda e: self.toggle_sensor_cam('Camera'))
 
+		#display toggle buttons
+		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 0), padx=(0, 2))
+		self.camera_btn.grid(row=0, column=1, sticky='nw', pady=(10, 0), padx=(2, 0))
+
 		#create frame for sensor outputs
 		self.sensors = tk.Frame(self.left)
 		self.sensors.config(bg='#525252')
-		self.sensors.grid(row=1, column=0, rowspan=6, columnspan = 2, sticky='nesw')
-		self.sensors.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+		self.sensors.grid(row=1, column=0, rowspan=5, columnspan = 2, sticky='nesw')
+		self.sensors.rowconfigure((0, 1, 2, 3), weight=1)
 		self.sensors.columnconfigure((0, 1), weight=1)
 
+		#labels for sensor outputs
 		self.temp_sensor_lbl = tk.Label(self.sensors, text='Temperature Sensor',
 										font=('calibri', 18), bg='#525252', fg='white')
+		self.temp_sensor = tk.Label(self.sensors, text=str(self.curr_temp) + '°',
+									font=('calibri', 18), bg='#525252', fg='white')
 		self.temp_sensor_lbl.grid(row=0, column=0, sticky='nw', padx=10)
+		self.temp_sensor.grid(row=0, column=1, sticky='ne', padx=10)
+
+		self.motion_sensor_lbl = tk.Label(self.sensors, text='Motion Sensor',
+										font=('calibri', 18), bg='#525252', fg='white')
+		self.motion_sensor = tk.Label(self.sensors, font=('calibri', 18),
+										text='Motion' if self._thermostat.motion else 'No Motion',
+										bg='#525252', fg='white')
+		self.motion_sensor_lbl.grid(row=1, column=0, sticky='nw', padx=10)
+		self.motion_sensor.grid(row=1, column=1, sticky='ne', padx=10)
+
+		self.audio_sensor_lbl = tk.Label(self.sensors, text='Audio Sensor',
+										font=('calibri', 18), bg='#525252', fg='white')
+		self.audio_sensor = tk.Label(self.sensors, font=('calibri', 18),
+									text='Detected' if self._thermostat.sound else 'Not Detected',
+									bg='#525252', fg='white')
+		self.audio_sensor_lbl.grid(row=2, column=0, sticky='nw', padx=10)
+		self.audio_sensor.grid(row=2, column=1, sticky='ne', padx=10)
+
+		self.people_sensor_lbl = tk.Label(self.sensors, text='Number of People in Room',
+										font=('calibri', 18), bg='#525252', fg='white')
+		self.people_sensor = tk.Label(self.sensors, text=str(self._thermostat.num_people),
+									font=('calibri', 18), bg='#525252', fg='white')
+		self.people_sensor_lbl.grid(row=3, column=0, sticky='nw', padx=10)
+		self.people_sensor.grid(row=3, column=1, sticky='ne', padx=10)
 
 		#create frame for camera outputs
 		self.cameras = tk.Frame(self.left)
@@ -86,12 +119,6 @@ class Settings(tk.Frame):
 		self.cameras.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
 		self.cameras.columnconfigure((0, 1), weight=1)
 
-
-		#display toggle buttons
-		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 0), padx=(0, 2))
-		self.camera_btn.grid(row=0, column=1, sticky='nw', pady=(10, 0), padx=(2, 0))
-
-		self.toggle_sensor_cam('Sensor')
 		#TODO: Create sensor/camera outputs
 		#--------------------------------------------
 
@@ -108,9 +135,10 @@ class Settings(tk.Frame):
 		#TODO: Create different settings management
 		#--------------------------------------------
 		
-		#call the update functions
+		#call the update functions and display sensor page
 		self.update_time()
 		self.update_curr_temp()
+		self.toggle_sensor_cam('Sensor')
 
 # --------------------- End Init Function  ---------------------
 
