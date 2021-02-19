@@ -49,16 +49,40 @@ class Dashboard(tk.Frame):
 		self.left.rowconfigure((0, 1, 2, 3, 4), weight=1, min='30')
 		self.left.columnconfigure(0, weight=1, min='200')
 
+		self.mode = self._thermostat.mode
+		self.fan = self._thermostat.fan
+		self.system = self._thermostat.system
+
+		self.mode_bg = tk.Label(self.left, bg='#525252', width=12)
 		self.mode_lbl = tk.Label(self.left, text='Mode', font=('calibri', 12),
 								bg='#525252', fg='white')
+		self.mode_stng = tk.Label(self.left, font=('calibri', 14),
+								bg='#525252', text=self.mode,
+								fg='#ff1212' if self.mode == 'Heat' else '#084eff')
+		
+		self.fan_bg = tk.Label(self.left, bg='#525252', width=12)
 		self.fan_lbl = tk.Label(self.left, text='Fan', font=('calibri', 12),
 								bg='#525252', fg='white')
-		self.system_lbl = tk.Label(self.left, text='System', font=('calibri', 12),
-								bg='#525252', fg='white')
+		self.fan_stng = tk.Label(self.left, font=('calibri', 14),
+								bg='#525252', fg='white',
+								text='On' if self.fan else 'Off')
 
-		self.mode_lbl.grid(row=0, column=0, sticky='n', ipadx=10)
-		self.fan_lbl.grid(row=2, column=0, sticky='n', ipadx=10)
-		self.system_lbl.grid(row=4, column=0, sticky='n', ipadx=10)
+		self.system_bg = tk.Label(self.left, bg='#525252', width=12)
+		self.system_lbl = tk.Label(self.left, text='System', font=('calibri', 12),
+									bg='#525252', fg='white')
+		self.system_stng = tk.Label(self.left, font=('calibri', 14),
+									bg='#525252', fg='white',
+									text=self.system)						
+
+		self.mode_bg.grid(row=0, column=0, sticky='ns', pady=(0, 15))
+		self.mode_lbl.grid(row=0, column=0, sticky='n')
+		self.mode_stng.grid(row=0, column=0)
+		self.fan_bg.grid(row=1, column=0, sticky='ns', pady=(0, 15))
+		self.fan_lbl.grid(row=1, column=0, sticky='n')
+		self.fan_stng.grid(row=1, column=0)
+		self.system_bg.grid(row=2, column=0, sticky='ns', pady=(0, 15))
+		self.system_lbl.grid(row=2, column=0, sticky='n')
+		self.system_stng.grid(row=2, column=0)
 		#--------------------------------------------
 
 		#create middle of dashboard
@@ -70,21 +94,20 @@ class Dashboard(tk.Frame):
 		self.middle.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
 		self.middle.columnconfigure((0, 1, 2), weight=1)
 
-		#background image for current temperature display
+		#create variables for temperature labels and temperature measurements
 		self.bg = tk.PhotoImage(file=curr_path + '/imgs/bg.png')
 		self.bg = self.bg.subsample(1, 1)
-
-		#create variables for temperature labels and temperature measurements
 		self.bg_img = tk.Label(self.middle, image=self.bg, borderwidth=0)
+
 		self.curr_temp = self._thermostat.curr_temp
+		self.desired_temp = self._thermostat.desired_temp
+
 		self.curr_temp_lbl2 = tk.Label(self.middle, font=('calibri', 16),
 										bg='#525252', fg='white',
 										text='Current Temp')
 		self.curr_temp_lbl = tk.Label(self.middle, font=('calibri', 40),
 										bg='#525252', fg='white',
 										text=str(self.curr_temp) + '°')
-
-		self.desired_temp = self._thermostat.desired_temp
 		self.desired_temp_lbl = tk.Label(self.middle, font=('calibri', 30), 
 										bg='#121212', fg='white', 
 										text=str(self.desired_temp) + '°')

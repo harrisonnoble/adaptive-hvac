@@ -31,6 +31,7 @@ class Thermostat:
         self._sound = False
         self._mode = 'Heat'
         self._fan = 0
+        self._system = 'Adaptive'
 
         self._app = GUI(self)
         self._app.title('Thermostat')
@@ -94,6 +95,10 @@ class Thermostat:
     @property
     def fan(self):
         return self._fan
+    
+    @property
+    def system(self):
+        return self._system
 
     #functions to update variables
     def update_curr_temp(self):
@@ -102,11 +107,13 @@ class Thermostat:
         return self._curr_temp
 
     def inc_desired_temp(self):
+        '''Increments desired temperature by 1 degree'''
         if self._desired_temp < self._max_temp:
             self._desired_temp += 1
         return self._desired_temp
     
     def dec_desired_temp(self):
+        '''Decrements desired temperature by 1 degree'''
         if self._desired_temp > self._min_temp:
             self._desired_temp -= 1
         return self._desired_temp
@@ -115,6 +122,12 @@ class Thermostat:
         '''Toggles thermostat between 'Heat' and 'Cool' modes and returns value'''
         self._mode = 'Heat' if self._mode == 'Cool' else 'Cool'
         return self._mode
+
+    def switch_system(self):
+        '''Toggles system between 'Adaptive' and 'Manual' modes and returns value'''
+        self._system = 'Adaptive' if self._system == 'Manual' else 'Manual'
+    
+
 
 # --------------------- End Helper Functions  ---------------------  
 
