@@ -14,15 +14,18 @@ Source code for the adaptive HVAC senior design project. This software is design
 ## Software Requirements
 - Python 3
 - pip
-- 
 
 ## Installing Dependancies
 
-TODO
+Navigate into the `adaptive-hvac` directory using terminal and run the `setup.sh` script.
 
 ## Running the Code
 
 ### Step 1
 
+Make sure you are in the `adaptive-hvac` directory.
+
 ### Step 2
+
+Run the `thermostat.py` script via terminal by entering `python3 thermostat.py`. 
 

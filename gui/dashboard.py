@@ -43,16 +43,19 @@ class Dashboard(tk.Frame):
 
 		#create left side of dashboard and display items
 		#--------------------------------------------
+		#configure left side of page as a frame
 		self.left = tk.Frame(self)
 		self.left.config(bg='#121212')
 		self.left.grid(row=1, column=0, rowspan=3, sticky='nesw')
 		self.left.rowconfigure((0, 1, 2, 3, 4), weight=1, min='30')
 		self.left.columnconfigure(0, weight=1, min='200')
 
+		#define variables to display
 		self.mode = self._thermostat.mode
 		self.fan = self._thermostat.fan
 		self.system = self._thermostat.system
 
+		#create labels for variables, variable descriptions, and backgrounds
 		self.mode_bg = tk.Label(self.left, bg='#525252', width=12)
 		self.mode_lbl = tk.Label(self.left, text='Mode', font=('calibri', 12),
 								bg='#525252', fg='white')
@@ -74,6 +77,7 @@ class Dashboard(tk.Frame):
 									bg='#525252', fg='white',
 									text=self.system)						
 
+		#display components of left side of screen
 		self.mode_bg.grid(row=0, column=0, sticky='ns', pady=(0, 15))
 		self.mode_lbl.grid(row=0, column=0, sticky='n')
 		self.mode_stng.grid(row=0, column=0)

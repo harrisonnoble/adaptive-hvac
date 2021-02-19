@@ -20,18 +20,19 @@ class Settings(tk.Frame):
 		#initialize thermostat in order to run functions
 		self._thermostat = thermostat
 
-		#layout management
-		for i in range(0, 4):
-			self.rowconfigure(i, weight=1)
-			self.columnconfigure(i, weight=1, min='200')
-
-		#get back image
+		#get current path to find images
 		curr_path = os.path.dirname(os.path.realpath(__file__))
-		self.image = tk.PhotoImage(file=curr_path + '/imgs/back.png')
-		self.image = self.image.subsample(4, 4)
 
+		#layout management
+		self.rowconfigure(0, weight=1)
+		self.rowconfigure((1, 2, 3), weight=5)
+		self.columnconfigure((0, 1, 2, 3), weight=1, min='200')
+
+		#create top row (time and settings toggle) and display items
+		#--------------------------------------------
 		#create a label with the back image and bind show_dashboard function
-		self.toggle_btn = tk.Label(self, image=self.image, borderwidth=0)
+		self.back_img = tk.PhotoImage(file=curr_path + '/imgs/back.png').subsample(4, 4)
+		self.toggle_btn = tk.Label(self, image=self.back_img, borderwidth=0)
 		self.toggle_btn.bind('<Button-1>', lambda e: controller.show_dashboard())
 
 		#create label for the time
@@ -43,10 +44,37 @@ class Settings(tk.Frame):
 		self.curr_temp_lbl = tk.Label(self, font=('calibri', 35),
 									bg='#121212', fg='white')
 
-		#display all components
+		#display all components in top row
 		self.toggle_btn.grid(column=0, row=0, sticky='nw', padx=10, pady=5)
 		self.time_label.grid(column=1, row=0, sticky='new', columnspan=2, pady=5)
 		self.curr_temp_lbl.grid(column=3, row=0, sticky='ne', padx=10, pady=5)
+		#--------------------------------------------
+
+		#create left side of settings page
+		#--------------------------------------------
+		#frame configuration
+		self.left = tk.Frame(self)
+		self.left.config(bg='#525252')
+		self.left.grid(row=1, column=0, rowspan=3, columnspan = 2, 
+						sticky='nesw', pady=(0, 20), padx=(15, 5))
+		self.left.rowconfigure(0, weight=1)
+		self.left.columnconfigure(0, weight=1)
+
+		#TODO: Create sensor/camera outputs
+		#--------------------------------------------
+
+		#create right side of settings page
+		#--------------------------------------------
+		#frame configuration
+		self.right = tk.Frame(self)
+		self.right.config(bg='#525252')
+		self.right.grid(row=1, column=2, rowspan=3, columnspan = 2, 
+						sticky='nesw', pady=(0, 20), padx=(5, 15))
+		self.right.rowconfigure(0, weight=1)
+		self.right.columnconfigure(0, weight=1)
+
+		#TODO: Create different settings management
+		#--------------------------------------------
 		
 		#call the update functions
 		self.update_time()
