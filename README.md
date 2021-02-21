@@ -16,7 +16,7 @@ Source code for the adaptive HVAC senior design project. This software is design
 
 ## Installing Dependancies
 
-Navigate into the `adaptive-hvac` directory using terminal and run the `setup.sh` script.
+Navigate into the `adaptive-hvac` directory using terminal and run the `setup.sh` script by entering `sudo bash setup.sh`. Follow the prompts if any. 
 
 ## Running the Code
 
