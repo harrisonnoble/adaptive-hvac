@@ -63,6 +63,7 @@ class Dashboard(tk.Frame):
 		self.mode_stng = tk.Label(self.left, font=('calibri', 14),
 								bg='#525252', text=self.mode,
 								fg='#ff1212' if self.mode == 'Heat' else '#0062ff')
+		self.mode_stng.bind('<Button-1>', lambda e: self.change_mode())
 		
 		self.fan_bg = tk.Label(self.left, bg='#525252', width=12)
 		self.fan_lbl = tk.Label(self.left, text='Fan', font=('calibri', 12),
