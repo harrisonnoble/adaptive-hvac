@@ -4,7 +4,7 @@
 import io
 import numpy as np
 import cv2 
-#from picamera import PiCamera
+from picamera import PiCamera
 
 class Camera:
 	'''Camera class interfaces with raspberry pi camera module. Contains the 
@@ -21,7 +21,7 @@ class Camera:
 		self._num_people = 0
 
 		self._stream = io.BytesIO()
-		#self.camera = PiCamera()
+		self.camera = PiCamera()
 
 # --------------------- End Init Function  ---------------------  
 

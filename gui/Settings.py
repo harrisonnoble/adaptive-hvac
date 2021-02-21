@@ -4,7 +4,6 @@
 import tkinter as tk
 from time import strftime
 import os
-from tkinter import font
 
 class Settings(tk.Frame): 
 	'''Settings class handles all administrative aspects of the thermostat
