@@ -8,7 +8,10 @@ import os
 class Dashboard(tk.Frame): 
 	'''Dashboard class that manages displaying current temperature, desired
 	temperature, fan control, and heat/cool control. Functionality to update
-	desired temperature, heat/cool mode and fan control handled in this class'''
+	desired temperature, heat/cool mode and fan control handled in this class. 
+	Arguements are: 'parent' which is the frame object that creates this class, 
+	'controller' which handles the swapping between the settings page and dashboard, 
+	and 'thermostat' which is the thermostat object created at the beginning of execution.'''
 
 # --------------------- Init Function ---------------------   
 

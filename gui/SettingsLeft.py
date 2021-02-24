@@ -6,7 +6,9 @@ from gui.SettingsSensors import SettingsSensors
 from gui.SettingsCameras import SettingsCameras
 
 class SettingsLeft(tk.Frame):
-	'''Description'''
+	'''SettingsLeft handles displaying the left side of the settings page. Arguements 
+	are: 'parent' which is the frame object that creates this class, and 'thermostat' 
+	which is the thermostat object created at the beginning of execution.'''
 	
 # --------------------- Init Function  ---------------------
 

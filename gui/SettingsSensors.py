@@ -4,7 +4,9 @@
 import tkinter as tk
 
 class SettingsSensors(tk.Frame):
-	'''Description'''
+	'''SettingsSensors handles displaying the sensor outputs in the left side of the settings
+	tab. Arguements are: 'parent' which is the frame object that creates this class, and 'thermostat' 
+	which is the thermostat object created at the beginning of execution.'''
 	
 # --------------------- Init Function  ---------------------
 

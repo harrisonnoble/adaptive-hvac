@@ -9,9 +9,11 @@ from time import strftime
 import os
 
 class Settings(tk.Frame): 
-	'''Settings class handles all administrative aspects of the thermostat
-	including power, rebooting, sensor readings and max/min temperature
-	operation ranges.'''
+	'''Settings class handles all administrative aspects of the thermostat including power,
+	rebooting, sensor readings and max/min temperature operation ranges. Arguements are: 
+	'parent' which is the frame object that creates this class, 'controller' which handles 
+	the swapping between the settings page and dashboard, and 'thermostat' which is the 
+	thermostat object created at the beginning of execution.'''
 
 # --------------------- Init Function  ---------------------   
 

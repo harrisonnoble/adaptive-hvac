@@ -4,7 +4,9 @@
 import tkinter as tk
 
 class SettingsRight(tk.Frame):
-	'''Description'''
+	'''SettingsRight handles displaying the right side of the settings page. Arguements 
+	are: 'parent' which is the frame object that creates this class, and 'thermostat' 
+	which is the thermostat object created at the beginning of execution.'''
 	
 # --------------------- Init Function  ---------------------
 
@@ -16,6 +18,8 @@ class SettingsRight(tk.Frame):
 				  sticky='nesw', pady=(0, 20), padx=(5, 15))
 		self.rowconfigure(0, weight=1)
 		self.columnconfigure(0, weight=1)
+
+		self._therm = thermostat
 
 		#TODO
 
