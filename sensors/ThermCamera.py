@@ -8,7 +8,6 @@ class ThermalCamera:
 # --------------------- Init Function  ---------------------  
 
 	def __init__(self):
-
 		pass
 
 # --------------------- End Init Function  ---------------------  

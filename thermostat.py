@@ -16,7 +16,7 @@ class Thermostat:
     def __init__(self):
 
         #Initialize all sensors
-        self.camera = sensors.Camera()
+        #self.camera = sensors.Camera()
         self.motion_sensor = sensors.MotionSensor()
         self.temp_sensor = sensors.TempSensor()
         self.therm_camera = sensors.ThermalCamera()

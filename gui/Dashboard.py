@@ -1,4 +1,4 @@
-# dashboard.py
+# Dashboard.py
 # written by Harrison Noble
 
 import tkinter as tk

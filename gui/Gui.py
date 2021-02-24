@@ -1,4 +1,4 @@
-# gui.py
+# Gui.py
 # written by Harrison Noble
 
 from gui.Dashboard import Dashboard
