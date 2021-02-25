@@ -80,7 +80,14 @@ class Camera:
 			cv2.imwrite('result.jpg', image)
 
 	def get_img(self):
-		pass
+		#adjust camera settings and send the image to memory stream
+		self._camera.resolution = (640, 360)
+		self._camera.capture(self._stream, format='jpeg')
+
+		#convert image to numpy array and use that to create an OpenCV image
+		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
+		image = cv2.imdecode(buffer, 1)
+		return image
 		
 	@property
 	def num_people(self):
@@ -90,6 +97,6 @@ class Camera:
 
 # --------------------- End Helper Functions  ---------------------  
 
-if __name__ == '__main__':
-	cam = Camera()
-	cam.detect_people(write_img=True)
+# if __name__ == '__main__':
+# 	cam = Camera()
+# 	cam.detect_people(write_img=True)

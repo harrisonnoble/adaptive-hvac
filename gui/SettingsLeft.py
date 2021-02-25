@@ -18,7 +18,8 @@ class SettingsLeft(tk.Frame):
 		self.config(bg='#525252')
 		self.grid(row=1, column=0, rowspan=3, columnspan = 2, 
 				  sticky='nesw', pady=(0, 20), padx=(15, 5))
-		self.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+		self.rowconfigure(0, weight=1)
+		self.rowconfigure((1, 2, 3, 4, 5), weight=2)
 		self.columnconfigure((0, 1), weight=1)
 
 		#create toggle buttons between sensors and camera

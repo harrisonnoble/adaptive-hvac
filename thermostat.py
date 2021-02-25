@@ -16,7 +16,7 @@ class Thermostat:
     def __init__(self):
 
         #Initialize all sensors
-        #self.camera = sensors.Camera()
+        self.camera = sensors.Camera()
         self.motion_sensor = sensors.MotionSensor()
         self.temp_sensor = sensors.TempSensor()
         self.therm_camera = sensors.ThermalCamera()
@@ -126,6 +126,12 @@ class Thermostat:
     def switch_system(self):
         '''Toggles system between 'Adaptive' and 'Manual' modes and returns value'''
         self._system = 'Adaptive' if self._system == 'Manual' else 'Manual'
+
+    def get_img(self):
+        return self.camera.get_img()
+
+    def algorithm(self):
+        pass
     
 # --------------------- End Helper Functions  ---------------------  
 

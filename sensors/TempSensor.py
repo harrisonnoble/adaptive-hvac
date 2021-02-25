@@ -28,7 +28,7 @@ class TempSensor:
 	def update_temp(self):
 		'''Function to update the temperature variable.
 		Uses bme280.py, a script made for the temperature sensor model'''
-		#temp, pressure, humidity = bme.readBME280All()
+		#temp, _, _ = bme.readBME280All()
 		#self._temperature = temp
 		pass
 
