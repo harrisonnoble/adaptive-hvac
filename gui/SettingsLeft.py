@@ -48,10 +48,12 @@ class SettingsLeft(tk.Frame):
 		if goto == 'Camera':
 			self.camera_btn.config(bg='#cdcdcd', fg='#353535')
 			self.sensor_btn.config(bg='#353535', fg='#cdcdcd')
+			self.cameras.update_img()
 			self.cameras.tkraise()
 		else:
 			self.sensor_btn.config(bg='#cdcdcd', fg='#353535')
 			self.camera_btn.config(bg='#353535', fg='#cdcdcd')
+			self.cameras.stop_update()
 			self.sensors.tkraise()
 
 # --------------------- End Helper Functions  ---------------------

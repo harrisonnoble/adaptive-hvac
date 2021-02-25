@@ -2,7 +2,7 @@
 # written by Harrison Noble
 
 import tkinter as tk
-from PIL import Image
+from PIL import Image, ImageTk
 
 class SettingsCameras(tk.Frame):
 	'''SettingsCameras handles displaying the camera outputs in the left side of the settings
@@ -25,19 +25,31 @@ class SettingsCameras(tk.Frame):
 								  bg='#525252', fg='white')
 		self.cam_title.grid(row=0, column=0, columnspan=2, sticky='n')
 
-		self.cam_img = tk.Label(image=Image.fromarray(self._therm.get_img()))
-		self.cam_img.grid(row=1, column=0, rowspan=2, columnspan=2)
+		self.picture = ImageTk.PhotoImage(image= Image.fromarray(self._therm.get_img()))
+		self.cam_img = tk.Label(self, image=self.picture)
+		self.cam_img.grid(row=1, column=0, rowspan=2, columnspan=2, sticky='n')
 
 		self.therm_title = tk.Label(self, text='Thermal Camera', font=('calibri', 20),
 								    bg='#525252', fg='white')
 		self.therm_title.grid(row=3, column=0, columnspan=2, sticky='n')
 		
+		self.stopper_img = None
 
 		#TODO
 
 # --------------------- End Init Function  ---------------------
 
 # --------------------- Helper Functions  ---------------------
+
+	def update_img(self):
+		self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
+		print("Here")
+		self.cam_img.config(image=self.picture)
+		self.stopper_img = self.cam_img.after(500, self.update_img)
+
+	def stop_update(self):
+		if self.stopper_img:
+			self.cam_img.after_cancel(self.stopper_img)
 
 #TODO
 

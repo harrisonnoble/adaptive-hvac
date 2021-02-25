@@ -11,3 +11,4 @@ sudo apt install python-picamera -y
 sudo pip3 install numpy
 sudo apt install python3-opencv
 sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev  libqtgui4  libqt4-test
+sudo apt-get install python3-pil.imagetk

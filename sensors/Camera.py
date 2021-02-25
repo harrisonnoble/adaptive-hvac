@@ -5,6 +5,7 @@ import io
 import numpy as np
 import cv2 
 from picamera import PiCamera
+import time
 
 class Camera:
 	'''Camera class interfaces with raspberry pi camera module. Contains the 
@@ -79,14 +80,21 @@ class Camera:
 
 			cv2.imwrite('result.jpg', image)
 
+		self._stream.seek(0)
+		self._stream.truncate(0)
+
 	def get_img(self):
 		#adjust camera settings and send the image to memory stream
-		self._camera.resolution = (640, 360)
+		self._camera.resolution = (224, 144)
 		self._camera.capture(self._stream, format='jpeg')
 
 		#convert image to numpy array and use that to create an OpenCV image
 		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
 		image = cv2.imdecode(buffer, 1)
+
+		self._stream.seek(0)
+		self._stream.truncate(0)
+
 		return image
 		
 	@property
@@ -99,4 +107,6 @@ class Camera:
 
 # if __name__ == '__main__':
 # 	cam = Camera()
-# 	cam.detect_people(write_img=True)
+# 	while True:
+# 		cam.detect_people(write_img=True)
+# 		time.sleep(2)
