@@ -16,7 +16,7 @@ class SettingsCameras(tk.Frame):
 		tk.Frame.__init__(self, parent)
 		self.config(bg='#525252')
 		self.grid(row=1, column=0, rowspan=6, columnspan = 2, sticky='nesw')
-		self.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+		self.rowconfigure((0, 1, 2, 3, 4), weight=1)
 		self.columnconfigure((0, 1), weight=1)
 
 		self._therm = thermostat
@@ -27,11 +27,11 @@ class SettingsCameras(tk.Frame):
 
 		self.picture = ImageTk.PhotoImage(image= Image.fromarray(self._therm.get_img()))
 		self.cam_img = tk.Label(self, image=self.picture)
-		self.cam_img.grid(row=1, column=0, rowspan=2, columnspan=2, sticky='n')
+		self.cam_img.grid(row=0, column=0, rowspan=2, columnspan=2)
 
 		self.therm_title = tk.Label(self, text='Thermal Camera', font=('calibri', 12),
 								    bg='#525252', fg='white')
-		self.therm_title.grid(row=3, column=0, columnspan=2, sticky='n')
+		self.therm_title.grid(row=2, column=0, columnspan=2, sticky='n')
 		
 		self.stopper_img = None
 
@@ -43,7 +43,6 @@ class SettingsCameras(tk.Frame):
 
 	def update_img(self):
 		self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
-		print("Here")
 		self.cam_img.config(image=self.picture)
 		self.stopper_img = self.cam_img.after(500, self.update_img)
 
