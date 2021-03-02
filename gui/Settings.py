@@ -40,13 +40,13 @@ class Settings(tk.Frame):
 		self.toggle_btn.grid(column=0, row=0, sticky='nw', padx=10, pady=5)
 
 		#create time label and display
-		self.time_label = tk.Label(self, font=('calibri', 35),
+		self.time_label = tk.Label(self, font=('calibri', 32),
 								   bg='#121212', fg='white')
 		self.time_label.grid(column=1, row=0, sticky='new', columnspan=2, pady=5)
 
 		#create current temperature label and display
 		self.curr_temp = self._thermostat.curr_temp
-		self.curr_temp_lbl = tk.Label(self, font=('calibri', 35), bg='#121212', 
+		self.curr_temp_lbl = tk.Label(self, font=('calibri', 32), bg='#121212', 
 									  fg='white', text=str(self.curr_temp) + '°')
 		self.curr_temp_lbl.grid(column=3, row=0, sticky='ne', padx=10, pady=5)
 

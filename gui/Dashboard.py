@@ -33,7 +33,7 @@ class Dashboard(tk.Frame):
 
 		#create top row (time and settings toggle) and display items
 		#--------------------------------------------
-		self.time_lbl = tk.Label(self, font=('calibri', 35),
+		self.time_lbl = tk.Label(self, font=('calibri', 32),
 								 bg='#121212', fg='white')
 
 		self.settings = tk.PhotoImage(file=curr_path + '/imgs/settings.png').subsample(4,4)
@@ -61,24 +61,24 @@ class Dashboard(tk.Frame):
 		#create labels for variables, variable descriptions, and backgrounds
 		self.mode_bg = tk.Label(self.left, bg='#525252', width=12)
 		self.mode_bg.bind('<Button-1>', lambda e: self.change_mode())
-		self.mode_lbl = tk.Label(self.left, text='Mode', font=('calibri', 12),
+		self.mode_lbl = tk.Label(self.left, text='Mode', font=('calibri', 11),
 								 bg='#525252', fg='white')
-		self.mode_stng = tk.Label(self.left, font=('calibri', 14),
+		self.mode_stng = tk.Label(self.left, font=('calibri', 13),
 								  bg='#525252', text=self.mode,
 								  fg='#ff1212' if self.mode == 'Heat' else '#0062ff')
 		self.mode_stng.bind('<Button-1>', lambda e: self.change_mode())
 		
 		self.fan_bg = tk.Label(self.left, bg='#525252', width=12)
-		self.fan_lbl = tk.Label(self.left, text='Fan', font=('calibri', 12),
+		self.fan_lbl = tk.Label(self.left, text='Fan', font=('calibri', 11),
 								bg='#525252', fg='white')
-		self.fan_stng = tk.Label(self.left, font=('calibri', 14),
+		self.fan_stng = tk.Label(self.left, font=('calibri', 13),
 								 bg='#525252', fg='white',
 								 text='On' if self.fan else 'Off')
 
 		self.system_bg = tk.Label(self.left, bg='#525252', width=12)
-		self.system_lbl = tk.Label(self.left, text='System', font=('calibri', 12),
+		self.system_lbl = tk.Label(self.left, text='System', font=('calibri', 11),
 								   bg='#525252', fg='white')
-		self.system_stng = tk.Label(self.left, font=('calibri', 14),
+		self.system_stng = tk.Label(self.left, font=('calibri', 13),
 									bg='#525252', fg='white',
 									text=self.system)						
 
@@ -111,10 +111,10 @@ class Dashboard(tk.Frame):
 		self.curr_temp = self._thermostat.curr_temp
 		self.desired_temp = self._thermostat.desired_temp
 
-		self.curr_temp_lbl2 = tk.Label(self.middle, font=('calibri', 16),
+		self.curr_temp_lbl2 = tk.Label(self.middle, font=('calibri', 14),
 									   bg='#525252', fg='white',
 									   text='Current Temp')
-		self.curr_temp_lbl = tk.Label(self.middle, font=('calibri', 40),
+		self.curr_temp_lbl = tk.Label(self.middle, font=('calibri', 38),
 									  bg='#525252', fg='white',
 									  text=str(self.curr_temp) + '°')
 		self.desired_temp_lbl = tk.Label(self.middle, font=('calibri', 30), 
@@ -125,11 +125,11 @@ class Dashboard(tk.Frame):
 										  text='Desired Temp')
 
 		#temperature increment / decrement buttons
-		self.temp_down = tk.Label(self.middle, font=('calibri', 35),
+		self.temp_down = tk.Label(self.middle, font=('calibri', 34),
 								  bg='#121212', fg='white', text='-')
 		self.temp_down.bind('<Button-1>', lambda e: self.dec_temp())
 
-		self.temp_up = tk.Label(self.middle, font=('calibri', 35),
+		self.temp_up = tk.Label(self.middle, font=('calibri', 34),
 								bg='#121212', fg='white', text='+')
 		self.temp_up.bind('<Button-1>', lambda e: self.inc_temp())								
 

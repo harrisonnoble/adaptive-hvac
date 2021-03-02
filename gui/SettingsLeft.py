@@ -23,10 +23,10 @@ class SettingsLeft(tk.Frame):
 		self.columnconfigure((0, 1), weight=1)
 
 		#create toggle buttons between sensors and camera
-		self.sensor_btn = tk.Label(self, text='Sensors', font=('calibri', 15),
+		self.sensor_btn = tk.Label(self, text='Sensors', font=('calibri', 12),
 								   bg='#cdcdcd', fg='#353535')
 		self.sensor_btn.bind('<Button-1>', lambda e: self.toggle_view('Sensor'))
-		self.camera_btn = tk.Label(self, text='Cameras', font=('calibri', 15),
+		self.camera_btn = tk.Label(self, text='Cameras', font=('calibri', 12),
 								   bg='#353535', fg='#cdcdcd')
 		self.camera_btn.bind('<Button-1>', lambda e: self.toggle_view('Camera'))
 

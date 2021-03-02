@@ -91,6 +91,8 @@ class Camera:
 		#convert image to numpy array and use that to create an OpenCV image
 		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
 		image = cv2.imdecode(buffer, 1)
+		#convert to RGB
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 		self._stream.seek(0)
 		self._stream.truncate(0)
@@ -105,8 +107,8 @@ class Camera:
 
 # --------------------- End Helper Functions  ---------------------  
 
-# if __name__ == '__main__':
-# 	cam = Camera()
-# 	while True:
-# 		cam.detect_people(write_img=True)
-# 		time.sleep(2)
+if __name__ == '__main__':
+	cam = Camera()
+	while True:
+		cam.detect_people(write_img=True)
+		time.sleep(3)
