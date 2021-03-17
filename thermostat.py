@@ -22,16 +22,20 @@ class Thermostat:
         self.therm_camera = sensors.ThermalCamera()
 
         #initialize all needed variables for thermostat execution
+        self._is_on = True
         self._min_temp = 50
         self._max_temp = 85
         self._curr_temp = self.temp_sensor.get_temp() or 0
         self._desired_temp = self._min_temp
         self._num_people = 0
-        self._motion = False
+        self._motion = self.motion_sensor.motion
         self._sound = False
         self._mode = 'Heat'
         self._fan = 0
         self._system = 'Adaptive'
+
+        #bind motion detection to detecting faces
+        self.motion_sensor.set_motion_func(self.update_num_people)
 
         self._app = GUI(self)
         self._app.title('Thermostat')
@@ -47,7 +51,19 @@ class Thermostat:
         Starts the main loop of the user interface'''
         self._app.mainloop()
 
+    def toggle_on(self):
+        self._is_on = not self._is_on
+        return self._is_on
+
+    def update_num_people(self):
+        self._num_people = self.camera.detect_people()
+        return self._num_people
+
     #getters and setters
+    @property 
+    def is_on(self):
+        return self._is_on
+
     @property
     def min_temp(self):
         return self._min_temp

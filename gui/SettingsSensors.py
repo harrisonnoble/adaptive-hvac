@@ -54,10 +54,25 @@ class SettingsSensors(tk.Frame):
 		self.camera_lbl.grid(row=3, column=0, sticky='nw', padx=(10, 0))
 		self.camera.grid(row=3, column=1, sticky='ne', padx=(0, 10))
 
+		self.stopper = None
+
+
+
 # --------------------- End Init Function  ---------------------
 
 # --------------------- Helper Functions  ---------------------
 
-#TODO
+	def update_sensors(self):
+		self.temp_sensor.config(text=str(self._therm.curr_temp) + '°')
+		self.motion_sensor.config(text='Motion' if self._therm.motion else 'No Motion')
+		self.audio_sensor.config(text='Detected' if self._therm.sound else 'Not Detected')
+		self.camera.config(text=str(self._therm.num_people))
+
+		self.stopper = self.after(100, self.update_sensors)
+
+	def stop_update(self):
+		if self.stopper:
+			self.after_cancel(self.stopper)
+
 
 # --------------------- End Helper Functions  ---------------------

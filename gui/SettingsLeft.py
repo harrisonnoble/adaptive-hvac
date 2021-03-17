@@ -38,6 +38,8 @@ class SettingsLeft(tk.Frame):
 		self.sensors = SettingsSensors(self, thermostat)
 		self.cameras = SettingsCameras(self, thermostat)
 
+		self._therm = thermostat
+
 		self.toggle_view('Sensor')
 
 # --------------------- End Init Function  ---------------------
@@ -48,12 +50,16 @@ class SettingsLeft(tk.Frame):
 		if goto == 'Camera':
 			self.camera_btn.config(bg='#cdcdcd', fg='#353535')
 			self.sensor_btn.config(bg='#353535', fg='#cdcdcd')
+			self.sensors.stop_update()
+			self._therm.camera.streaming_img = True
 			self.cameras.update_img()
 			self.cameras.tkraise()
 		else:
 			self.sensor_btn.config(bg='#cdcdcd', fg='#353535')
 			self.camera_btn.config(bg='#353535', fg='#cdcdcd')
 			self.cameras.stop_update()
+			self._therm.camera.streaming_img = False
+			self.sensors.update_sensors()
 			self.sensors.tkraise()
 
 # --------------------- End Helper Functions  ---------------------

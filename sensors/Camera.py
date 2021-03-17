@@ -7,6 +7,8 @@ import cv2
 from picamera import PiCamera
 import time
 
+from picamera.exc import PiCameraRuntimeError
+
 class Camera:
 	'''Camera class interfaces with raspberry pi camera module. Contains the 
 	machine learning model to determine number of people in the room.'''
@@ -27,16 +29,26 @@ class Camera:
 		#create camera
 		self._camera = PiCamera()
 
+		self.streaming_img = False
+
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  ---------------------  
 
-	def detect_people(self, write_img=False):
+	def _detect_people(self, write_img=False):
 		'''Function to determine number of people in the room'''
 
 		#adjust camera settings and send the image to memory stream
-		self._camera.resolution = (640, 360)
-		self._camera.capture(self._stream, format='jpeg')
+		if not self.streaming_img:
+			try:
+				self._camera.resolution = (640, 360)
+				self._camera.capture(self._stream, format='jpeg')
+			except:
+				print('Camera busy... skipping detection')
+				return
+		else:
+			print('Camera busy... skipping detection')
+			return
 
 		#convert image to numpy array and use that to create an OpenCV image
 		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
@@ -69,7 +81,7 @@ class Camera:
 		print('Found', str(len(profiles)), 'profiles')
 
 		#save number of people to the num_people variable
-		self._num_people = len(faces)
+		self._num_people = len(faces) + len(profiles)
 
 		#save image to a 'result.jpg' if parameter is true
 		if write_img:
@@ -85,8 +97,12 @@ class Camera:
 
 	def get_img(self):
 		#adjust camera settings and send the image to memory stream
-		self._camera.resolution = (224, 144)
-		self._camera.capture(self._stream, format='jpeg')
+		try:
+			self._camera.resolution = (224, 144)
+			self._camera.capture(self._stream, format='jpeg')
+		except:
+			print('Camera busy... skipping stream')
+			return
 
 		#convert image to numpy array and use that to create an OpenCV image
 		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
@@ -98,11 +114,14 @@ class Camera:
 		self._stream.truncate(0)
 
 		return image
+
+	def detect_people(self):
+		self._detect_people()
+		return self._num_people
 		
 	@property
 	def num_people(self):
 		'''Function that returns number of people in the room'''
-		self.detect_people()
 		return self._num_people
 
 # --------------------- End Helper Functions  ---------------------  
