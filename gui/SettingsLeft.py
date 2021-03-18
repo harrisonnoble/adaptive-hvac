@@ -31,8 +31,8 @@ class SettingsLeft(tk.Frame):
 		self.camera_btn.bind('<Button-1>', lambda e: self.toggle_view('Camera'))
 
 		#display toggle buttons
-		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 0), padx=(0, 2))
-		self.camera_btn.grid(row=0, column=1, sticky='nw', pady=(10, 0), padx=(2, 0))
+		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 0), padx=(0, 4), ipadx=4)
+		self.camera_btn.grid(row=0, column=1, sticky='nw', pady=(10, 0), padx=(4, 0), ipadx=4)
 
 		#create sensors and cameras frames
 		self.sensors = SettingsSensors(self, thermostat)

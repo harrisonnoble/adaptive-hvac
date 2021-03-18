@@ -23,6 +23,7 @@ class Thermostat:
 
         #initialize all needed variables for thermostat execution
         self._is_on = True
+        self._degrees = self.temp_sensor.mode
         self._min_temp = 50
         self._max_temp = 85
         self._curr_temp = self.temp_sensor.get_temp() or 0
@@ -55,6 +56,11 @@ class Thermostat:
         self._is_on = not self._is_on
         return self._is_on
 
+    def toggle_degree(self):
+        self.temp_sensor.toggle_mode()
+        self._degrees = self.temp_sensor.mode
+        return self._degrees
+
     def update_num_people(self):
         self._num_people = self.camera.detect_people()
         return self._num_people
@@ -63,6 +69,10 @@ class Thermostat:
     @property 
     def is_on(self):
         return self._is_on
+
+    @property
+    def degree(self):
+        return self._degrees
 
     @property
     def min_temp(self):

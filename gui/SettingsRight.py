@@ -16,7 +16,8 @@ class SettingsRight(tk.Frame):
 		self.config(bg='#525252')
 		self.grid(row=1, column=2, rowspan=3, columnspan = 2, 
 				  sticky='nesw', pady=(0, 20), padx=(5, 15))
-		self.columnconfigure((0, 1), weight=1)
+		self.columnconfigure(0, weight=2)
+		self.columnconfigure((1, 2), weight=1)
 		self.rowconfigure((0, 1, 2, 3, 4), weight=1)
 
 		self._therm = thermostat
@@ -26,6 +27,16 @@ class SettingsRight(tk.Frame):
 								   font=('calibri', 14),
 								   bg='#525252', fg='white')
 		self.pwr_option.grid(row=0, column=0, sticky='w', padx=(10, 0))
+
+		self.on_btn = tk.Label(self, text='On', font=('calibri', 14),
+								   bg='#cdcdcd', fg='#353535')
+		self.on_btn.bind('<Button-1>', lambda e: self.toggle_power())
+		self.off_btn = tk.Label(self, text='Off', font=('calibri', 14),
+								   bg='#353535', fg='#cdcdcd')
+		self.off_btn.bind('<Button-1>', lambda e: self.toggle_power())
+
+		self.on_btn.grid(row=0, column=1, sticky='e', padx=(0, 4), ipadx=4)
+		self.off_btn.grid(row=0, column=2, sticky='w', padx=(4, 0), ipadx=4)
 
 		#reboot option
 		self.reboot_option = tk.Label(self, text='Reboot Thermostat',
@@ -45,6 +56,16 @@ class SettingsRight(tk.Frame):
 									bg='#525252', fg='white')
 		self.temp_option.grid(row=3, column=0, sticky='w', padx=(10, 0))
 
+		self.f_btn = tk.Label(self, text='F', font=('calibri', 14),
+								   bg='#cdcdcd', fg='#353535')
+		self.f_btn.bind('<Button-1>', lambda e: self.toggle_temp())
+		self.c_btn = tk.Label(self, text='C', font=('calibri', 14),
+								   bg='#353535', fg='#cdcdcd')
+		self.c_btn.bind('<Button-1>', lambda e: self.toggle_temp())
+
+		self.f_btn.grid(row=3, column=1, sticky='e', padx=(0, 4), ipadx=4)
+		self.c_btn.grid(row=3, column=2, sticky='w', padx=(4, 0), ipadx=4)
+
 		#adaptive or manual mode setting
 		self.temp_option = tk.Label(self, text='Thermostat Mode',
 									font=('calibri', 14),
@@ -55,6 +76,23 @@ class SettingsRight(tk.Frame):
 
 # --------------------- Helper Functions  ---------------------
 
-#TODO
+	def toggle_power(self):
+		if self._therm.is_on:
+			self.off_btn.config(bg='#cdcdcd', fg='#353535')
+			self.on_btn.config(bg='#353535', fg='#cdcdcd')
+		else:
+			self.on_btn.config(bg='#cdcdcd', fg='#353535')
+			self.off_btn.config(bg='#353535', fg='#cdcdcd')
+		self._therm.toggle_on()
+
+	def toggle_temp(self):
+		if self._therm.degree == 'F':
+			self.c_btn.config(bg='#cdcdcd', fg='#353535')
+			self.f_btn.config(bg='#353535', fg='#cdcdcd')
+		else:
+			self.f_btn.config(bg='#cdcdcd', fg='#353535')
+			self.c_btn.config(bg='#353535', fg='#cdcdcd')
+		self._therm.toggle_degree()
+		print(self._therm.degree)
 
 # --------------------- End Helper Functions  ---------------------

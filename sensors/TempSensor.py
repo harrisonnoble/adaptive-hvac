@@ -10,7 +10,7 @@ class TempSensor:
 
 	def __init__(self):
 		self._temperature = 0
-		self._mode = 'C'
+		self._mode = 'F'
 
 		self.update_temp()
 
@@ -46,6 +46,7 @@ class TempSensor:
 
 	def toggle_mode(self):
 		'''Toggle between fahrenheit or celcius modes'''
-		self._mode = 'C' if self._mode == 'F' else 'C'
+		self._mode = 'C' if self._mode == 'F' else 'F'
+		return self._mode
 
 # --------------------- End Helper Functions  ---------------------  
