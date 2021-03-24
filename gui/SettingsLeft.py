@@ -40,6 +40,7 @@ class SettingsLeft(tk.Frame):
 
 		self._therm = thermostat
 
+		self._view = 'Sensor'
 		self.toggle_view('Sensor')
 
 # --------------------- End Init Function  ---------------------
@@ -47,19 +48,39 @@ class SettingsLeft(tk.Frame):
 # --------------------- Helper Functions  ---------------------
 
 	def toggle_view(self, goto):
+		#display camera page or sensor page and stop respective update function
 		if goto == 'Camera':
 			self.camera_btn.config(bg='#cdcdcd', fg='#353535')
 			self.sensor_btn.config(bg='#353535', fg='#cdcdcd')
-			self.sensors.stop_update()
+			self.sensors.stopper()
 			self._therm.camera.streaming_img = True
-			self.cameras.update_img()
+			self.cameras.starter()
 			self.cameras.tkraise()
+
+			self._view = goto
 		else:
 			self.sensor_btn.config(bg='#cdcdcd', fg='#353535')
 			self.camera_btn.config(bg='#353535', fg='#cdcdcd')
-			self.cameras.stop_update()
+			self.cameras.stopper()
 			self._therm.camera.streaming_img = False
-			self.sensors.update_sensors()
+			self.sensors.starter()
 			self.sensors.tkraise()
+
+			self._view = goto
+
+	def stopper(self):
+		self.cameras.stopper()
+		self.sensors.stopper()
+		self._therm.camera.streaming_img = False
+
+	def starter(self):
+		if self._view == 'Camera':
+			self.sensors.stopper()
+			self._therm.camera.streaming_img = True
+			self.cameras.starter()
+		else:
+			self.cameras.stopper()
+			self._therm.camera.streaming_img = False
+			self.sensors.starter()
 
 # --------------------- End Helper Functions  ---------------------

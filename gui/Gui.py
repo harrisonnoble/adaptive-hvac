@@ -40,12 +40,20 @@ class GUI(tk.Tk):
 
 	def show_dashboard(self):
 		'''Toggle to the main dashboard'''
-		frame = self.frame[Dashboard]    
+		#stop update functions in settings first
+		self.frame[Settings].stopper()
+
+		frame = self.frame[Dashboard]
+		frame.starter()
 		frame.tkraise()
 	
 	def show_settings(self): 
 		'''Toggle to the settings page'''
+		#stop update functions in dashboard first
+		self.frame[Dashboard].stopper()
+
 		frame = self.frame[Settings] 
+		frame.starter()
 		frame.tkraise()
 
 # --------------------- End Helper Functions  ---------------------  

@@ -4,6 +4,7 @@
 
 from gui.Gui import GUI
 import sensors.Sensors as sensors
+import math
 
 class Thermostat:
     '''Thermostat class creates UI and all sensors. This is the main
@@ -15,24 +16,30 @@ class Thermostat:
 
     def __init__(self):
 
-        #Initialize all sensors
-        self.camera = sensors.Camera()
+        #Initialize all sensors & cameras
         self.motion_sensor = sensors.MotionSensor()
         self.temp_sensor = sensors.TempSensor()
         self.therm_camera = sensors.ThermalCamera()
+        #wait until pi camera is available
+        self.camera = None
+        while self.camera is None:
+            try:
+                self.camera = sensors.Camera()
+            except:
+                pass
 
         #initialize all needed variables for thermostat execution
         self._is_on = True
         self._degrees = self.temp_sensor.mode
         self._min_temp = 50
         self._max_temp = 85
-        self._curr_temp = self.temp_sensor.get_temp() or 0
+        self._curr_temp = self.temp_sensor.get_temp()
         self._desired_temp = self._min_temp
         self._num_people = 0
         self._motion = self.motion_sensor.motion
         self._sound = False
         self._mode = 'Heat'
-        self._fan = 0
+        self._fan = False
         self._system = 'Adaptive'
 
         #bind motion detection to detecting faces
@@ -57,13 +64,39 @@ class Thermostat:
         return self._is_on
 
     def toggle_degree(self):
-        self.temp_sensor.toggle_mode()
-        self._degrees = self.temp_sensor.mode
+        self._degrees = self.temp_sensor.toggle_mode()
+        self.update_curr_temp()
+        self.update_temps()
         return self._degrees
+
+    def update_curr_temp(self):
+        self._curr_temp = self.temp_sensor.get_temp()
+        return self._curr_temp
 
     def update_num_people(self):
         self._num_people = self.camera.detect_people()
         return self._num_people
+
+    def toggle_fan(self):
+        self._fan = False if self._fan else True
+        return self._fan
+
+    def toggle_system(self):
+        self._system = 'Adaptive' if self._system == 'Manual' else 'Manual'
+        return self._system
+
+    def update_temps(self):
+        #update min temp, max temp, and desired temp based on degree
+        if self._degrees == 'C':
+            #F to C
+            self._min_temp = round((self._min_temp - 32) * (5/9))
+            self._max_temp = round((self._max_temp - 32) * (5/9))
+            self._desired_temp = round((self._desired_temp - 32) * (5/9))
+        else:
+            #C to F
+            self._min_temp = round((self._min_temp * 1.8) + 32)
+            self._max_temp = round((self._max_temp * 1.8) + 32)
+            self._desired_temp = round((self._desired_temp * 1.8) + 32)
 
     #getters and setters
     @property 

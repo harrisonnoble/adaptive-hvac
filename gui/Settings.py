@@ -53,24 +53,44 @@ class Settings(tk.Frame):
 		#create left and right side of settings page
 		self.left = SettingsLeft(self, thermostat)
 		self.right = SettingsRight(self, thermostat)
+
+		#variables to stop updates when not on page
+		self.time_stopper = None
+		self.temp_stopper = None
 		
 		#call the update functions
-		self.update_time()
-		self.update_curr_temp()
+		self.starter()
 
 # --------------------- End Init Function  ---------------------
 
 # --------------------- Helper Functions  ---------------------
 
 	def update_time(self):
-		'''Function to update the displayed time every 30 seconds'''
+		'''Function to update the displayed time every 10 seconds'''
 		self.time_label.config(text=strftime('%-I:%M %p'))
-		self.time_label.after(30000, self.update_time)
+		self.time_stopper = self.time_label.after(10000, self.update_time)
 
 	def update_curr_temp(self):
 		'''Function to update current temperature label'''
 		self.curr_temp = self._thermostat.curr_temp
 		self.curr_temp_lbl.config(text=str(self.curr_temp) + '°')
-		self.curr_temp_lbl.after(10000, self.update_curr_temp)
+		self.temp_stopper = self.curr_temp_lbl.after(200, self.update_curr_temp)
+
+	def stopper(self):
+		'''Stop all updates'''
+		if self.time_stopper:
+			self.time_label.after_cancel(self.time_stopper)
+			self.time_stopper = None
+		if self.temp_stopper:
+			self.curr_temp_lbl.after_cancel(self.temp_stopper)
+			self.temp_stopper = None
+
+		self.left.stopper()
+
+	def starter(self):
+		'''Begin updates'''
+		self.update_time()
+		self.update_curr_temp()
+		self.left.starter()
 
 # --------------------- End Helper Functions  ---------------------

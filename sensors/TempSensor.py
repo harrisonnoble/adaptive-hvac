@@ -9,7 +9,7 @@ class TempSensor:
 # --------------------- Init Function  ---------------------  
 
 	def __init__(self):
-		self._temperature = 0
+		self._temperature = 0.
 		self._mode = 'F'
 
 		self.update_temp()
