@@ -20,13 +20,7 @@ class Thermostat:
         self.motion_sensor = sensors.MotionSensor()
         self.temp_sensor = sensors.TempSensor()
         self.therm_camera = sensors.ThermalCamera()
-        #wait until pi camera is available
-        self.camera = None
-        while self.camera is None:
-            try:
-                self.camera = sensors.Camera()
-            except:
-                pass
+        self.camera = sensors.Camera()
 
         #initialize all needed variables for thermostat execution
         self._is_on = True
@@ -42,8 +36,10 @@ class Thermostat:
         self._fan = False
         self._system = 'Adaptive'
 
-        #bind motion detection to detecting faces
-        self.motion_sensor.set_motion_func(self.update_num_people)
+        #bind motion detection to detecting faces and updating motion variable
+        self.motion_sensor.set_motion_func(self.motion_func)
+        #bind no motion to updating motion variable to false
+        self.motion_sensor.set_no_motion_func(self.no_motion_func)
 
         self._app = GUI(self)
         self._app.title('Thermostat')
@@ -72,6 +68,13 @@ class Thermostat:
     def update_curr_temp(self):
         self._curr_temp = self.temp_sensor.get_temp()
         return self._curr_temp
+
+    def motion_func(self):
+        self._motion = self.motion_sensor.motion
+        self.update_num_people()
+
+    def no_motion_func(self):
+        self._motion = self.motion_sensor.motion
 
     def update_num_people(self):
         self._num_people = self.camera.detect_people()

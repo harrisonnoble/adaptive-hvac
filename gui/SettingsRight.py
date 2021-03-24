@@ -4,7 +4,7 @@
 import tkinter as tk
 import sys
 import os
-import pathlib
+import time
 
 class SettingsRight(tk.Frame):
 	'''SettingsRight handles displaying the right side of the settings page. Arguements 
@@ -24,6 +24,7 @@ class SettingsRight(tk.Frame):
 		self.rowconfigure((0, 1, 2, 3, 4), weight=1)
 
 		self._therm = thermostat
+		self._parent = parent
 
 		#Thermostat power option
 		self.pwr_option = tk.Label(self, text='Thermostat Power',
@@ -51,8 +52,7 @@ class SettingsRight(tk.Frame):
 								   font=('calibri', 14),
 								   bg='#cdcdcd', fg='#353535')
 		self.reboot_btn.bind('<Button-1>', lambda e: self.reboot())
-		self.reboot_btn.grid(row=1, column=1, 
-							 columnspan=2, ipadx=4)
+		self.reboot_btn.grid(row=1, column=1, columnspan=2, ipadx=4, padx=4)
 
 		#max and min temp settings
 		self.temp_range = tk.Label(self, text='Temp Range',
@@ -107,7 +107,8 @@ class SettingsRight(tk.Frame):
 
 	def reboot(self):
 		print('Rebooting...')
-		print(sys.executable, sys.argv)
+		self._parent.stopper()
+		time.sleep(2)
 		os.execv(sys.executable, ['python3'] + sys.argv)
 
 	def toggle_temp(self):

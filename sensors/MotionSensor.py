@@ -2,6 +2,7 @@
 # written by Harrison Noble
 
 from gpiozero import MotionSensor as MS
+import time
 
 class MotionSensor:
 	'''MotionSensor class to interface with the HC-SR501 motion sensor.'''
@@ -17,6 +18,7 @@ class MotionSensor:
 		self._sensor.when_no_motion = self.no_motion
 
 		self._motion_func = None
+		self._no_motion_func = None
 
 # --------------------- End Init Function  ---------------------  
 
@@ -24,23 +26,26 @@ class MotionSensor:
 
 	def set_motion_func(self, func):
 		'''Function used to add an additional function call when motion is detected.'''
-
 		if func:
 			self._motion_func = func
 
+	def set_no_motion_func(self, func):
+		'''Function used to add an additional function call when no motion is detected.'''
+		if func:
+			self._no_motion_func = func
+
 	def on_motion(self):
 		'''Function that is called when motion sensor detects motion'''
-
+		self._motion = True
 		if self._motion_func:
 			self._motion_func()
-
-		self._motion = True
+		time.sleep(5)
 
 	def no_motion(self):
 		'''Function called when motion sensor stops detecting motion'''
-
 		self._motion = False
-		print('no motion')
+		if self._no_motion_func:
+			self._no_motion_func()
 
 	@property
 	def motion(self):

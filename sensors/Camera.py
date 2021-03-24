@@ -27,7 +27,7 @@ class Camera:
 		self._stream = io.BytesIO()
 
 		#create camera
-		self._camera = PiCamera()
+		#self._camera = PiCamera()
 
 		self.streaming_img = False
 
@@ -41,10 +41,11 @@ class Camera:
 		#adjust camera settings and send the image to memory stream
 		if not self.streaming_img:
 			try:
-				self._camera.resolution = (640, 360)
-				self._camera.capture(self._stream, format='jpeg')
+				with PiCamera() as camera:
+					camera.resolution = (640, 360)
+					camera.capture(self._stream, format='jpeg')
 			except:
-				print('Camera busy... skipping detection')
+				print('Camera error... skipping detection')
 				return
 		else:
 			print('Camera busy... skipping detection')
@@ -77,8 +78,7 @@ class Camera:
 
 		profiles = profiles_not_faces
 
-		print('Found', str(len(faces)), 'faces')
-		print('Found', str(len(profiles)), 'profiles')
+		print('Found', str(len(faces)), 'faces and', str(len(profiles)), 'profiles')
 
 		#save number of people to the num_people variable
 		self._num_people = len(faces) + len(profiles)
@@ -98,10 +98,11 @@ class Camera:
 	def get_img(self):
 		#adjust camera settings and send the image to memory stream
 		try:
-			self._camera.resolution = (224, 144)
-			self._camera.capture(self._stream, format='jpeg')
+			with PiCamera() as camera:
+				camera.resolution = (224, 144)
+				camera.capture(self._stream, format='jpeg')
 		except:
-			print('Camera busy... skipping stream')
+			print('Camera error... skipping stream')
 			return
 
 		#convert image to numpy array and use that to create an OpenCV image
@@ -125,9 +126,3 @@ class Camera:
 		return self._num_people
 
 # --------------------- End Helper Functions  ---------------------  
-
-if __name__ == '__main__':
-	cam = Camera()
-	while True:
-		cam.detect_people(write_img=True)
-		time.sleep(3)
