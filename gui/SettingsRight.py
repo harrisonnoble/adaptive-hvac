@@ -21,7 +21,7 @@ class SettingsRight(tk.Frame):
 				  sticky='nesw', pady=(0, 20), padx=(5, 15))
 		self.columnconfigure(0, weight=2)
 		self.columnconfigure((1, 2), weight=1)
-		self.rowconfigure((0, 1, 2, 3, 4), weight=1)
+		self.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
 
 		self._therm = thermostat
 		self._parent = parent
@@ -54,17 +54,23 @@ class SettingsRight(tk.Frame):
 		self.reboot_btn.bind('<Button-1>', lambda e: self.reboot())
 		self.reboot_btn.grid(row=1, column=1, columnspan=2, ipadx=4, padx=4)
 
+		#room size setting
+		self.room_size_lbl = tk.Label(self, text='Room Size',
+									  font=('calibri', 14),
+								   	  bg='#525252', fg='white')
+		self.room_size_lbl.grid(row=2, column=0, sticky='w', padx=(10, 0))
+
 		#max and min temp settings
 		self.temp_range = tk.Label(self, text='Temp Range',
 								   font=('calibri', 14),
 								   bg='#525252', fg='white')
-		self.temp_range.grid(row=2, column=0, sticky='w', padx=(10, 0))
+		self.temp_range.grid(row=3, column=0, sticky='w', padx=(10, 0))
 
 		#fahrenheit or celcius setting
 		self.temp_option = tk.Label(self, text='Temp Reading',
 									font=('calibri', 14),
 									bg='#525252', fg='white')
-		self.temp_option.grid(row=3, column=0, sticky='w', padx=(10, 0))
+		self.temp_option.grid(row=4, column=0, sticky='w', padx=(10, 0))
 
 		self.f_btn = tk.Label(self, text='F', font=('calibri', 14),
 								   bg='#cdcdcd', fg='#353535')
@@ -73,14 +79,14 @@ class SettingsRight(tk.Frame):
 								   bg='#353535', fg='#cdcdcd')
 		self.c_btn.bind('<Button-1>', lambda e: self.toggle_temp())
 
-		self.f_btn.grid(row=3, column=1, sticky='e', padx=(0, 4), ipadx=4)
-		self.c_btn.grid(row=3, column=2, sticky='w', padx=(4, 0), ipadx=4)
+		self.f_btn.grid(row=4, column=1, sticky='e', padx=(0, 4), ipadx=4)
+		self.c_btn.grid(row=4, column=2, sticky='w', padx=(4, 0), ipadx=4)
 
 		#adaptive or manual mode setting
 		self.mode_option = tk.Label(self, text='Thermostat Mode',
 									font=('calibri', 14),
 									bg='#525252', fg='white')
-		self.mode_option.grid(row=4, column=0, sticky='w', padx=(10, 0))
+		self.mode_option.grid(row=5, column=0, sticky='w', padx=(10, 0))
 
 		self.adaptive_btn = tk.Label(self, text='Adaptive', font=('calibri', 14),
 								   bg='#cdcdcd', fg='#353535')
@@ -89,14 +95,15 @@ class SettingsRight(tk.Frame):
 								   bg='#353535', fg='#cdcdcd')
 		self.manual_btn.bind('<Button-1>', lambda e: self.toggle_mode())
 
-		self.adaptive_btn.grid(row=4, column=1, sticky='e', padx=(0, 2), ipadx=2)
-		self.manual_btn.grid(row=4, column=2, sticky='w', padx=(2, 0), ipadx=2)
+		self.adaptive_btn.grid(row=5, column=1, sticky='e', padx=(0, 2), ipadx=2)
+		self.manual_btn.grid(row=5, column=2, sticky='w', padx=(2, 0), ipadx=2)
 
 # --------------------- End Init Function  ---------------------
 
 # --------------------- Helper Functions  ---------------------
 
 	def toggle_power(self):
+		'''function to turn thermostat on or off'''
 		if self._therm.is_on:
 			self.off_btn.config(bg='#cdcdcd', fg='#353535')
 			self.on_btn.config(bg='#353535', fg='#cdcdcd')
@@ -106,12 +113,14 @@ class SettingsRight(tk.Frame):
 		self._therm.toggle_on()
 
 	def reboot(self):
+		'''function to stop thermostat and run it again'''
 		print('Rebooting...')
 		self._parent.stopper()
 		time.sleep(2)
 		os.execv(sys.executable, ['python3'] + sys.argv)
 
 	def toggle_temp(self):
+		'''Toggle between degrees C or F and also update temperature outputs'''
 		if self._therm.degree == 'F':
 			self.c_btn.config(bg='#cdcdcd', fg='#353535')
 			self.f_btn.config(bg='#353535', fg='#cdcdcd')
@@ -119,8 +128,10 @@ class SettingsRight(tk.Frame):
 			self.f_btn.config(bg='#cdcdcd', fg='#353535')
 			self.c_btn.config(bg='#353535', fg='#cdcdcd')
 		self._therm.toggle_degree()
+		self._parent.update_curr_temp_degree()
 
 	def toggle_mode(self):
+		'''Toggle between adaptive and manual mode'''
 		if self._therm.system == 'Adaptive':
 			self.manual_btn.config(bg='#cdcdcd', fg='#353535')
 			self.adaptive_btn.config(bg='#353535', fg='#cdcdcd')

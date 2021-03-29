@@ -1,19 +1,18 @@
 # MotionSensor.py
 # written by Harrison Noble
 
-from gpiozero import MotionSensor as MS
+from gpiozero import MotionSensor as MotionSense
 import time
 
 class MotionSensor:
-	'''MotionSensor class to interface with the HC-SR501 motion sensor.'''
+	'''MotionSensor class to interface with the HC-SR501 motion sensor'''
 
 # --------------------- Init Function  ---------------------  
 
 	def __init__(self):
 		self._motion = False
 
-		self._sensor = MS(4)
-
+		self._sensor = MotionSense(4)
 		self._sensor.when_motion = self.on_motion
 		self._sensor.when_no_motion = self.no_motion
 
@@ -49,6 +48,7 @@ class MotionSensor:
 
 	@property
 	def motion(self):
+		'''property that returns motion boolean'''
 		return self._motion
 
 # --------------------- End Helper Functions  ---------------------  

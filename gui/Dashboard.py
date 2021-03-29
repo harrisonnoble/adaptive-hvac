@@ -143,23 +143,19 @@ class Dashboard(tk.Frame):
 		self.curr_temp_stopper = None
 		self.fan_stopper = None
 
-		#call starter function to update values
-		self.starter()
-
 # --------------------- End Init Function ---------------------
 
 # --------------------- Helper Functions  ---------------------
 
 	def update_time(self):
 		'''Function to update the displayed time every 30 seconds'''
-		t = strftime('%-I:%M %p')
-		self.time_lbl.config(text=t)
-		self.time_lbl.after(30000, self.update_time)
+		self.time_lbl.config(text=strftime('%-I:%M %p'))
+		self.time_stopper = self.time_lbl.after(30000, self.update_time)
 
 	def update_curr_temp(self):
 		'''Function to update current temperature label'''
-		self.curr_temp_lbl.config(text=str(self._therm.curr_temp) + '°')
-		self.curr_temp_lbl.after(200, self.update_curr_temp)
+		self.curr_temp_lbl.config(text=str(self._therm.update_curr_temp()) + '°')
+		self.curr_temp_stopper = self.curr_temp_lbl.after(10000, self.update_curr_temp)
 
 	def inc_temp(self):
 		'''Function to increment desired temperature label'''
@@ -217,6 +213,7 @@ class Dashboard(tk.Frame):
 			self.desired_temp_lbl.config(text='Off')
 
 	def stopper(self):
+		'''function that stops all update functions'''
 		if self.time_stopper:
 			self.time_lbl.after_cancel(self.time_stopper)
 			self.time_stopper = None
@@ -228,6 +225,7 @@ class Dashboard(tk.Frame):
 			self.fan_stopper = None
 
 	def starter(self):
+		'''function that starts all update functions'''
 		self.update_time()
 		self.update_curr_temp()
 		self.update_fan()

@@ -5,7 +5,7 @@ from gui.Dashboard import Dashboard
 from gui.Settings import Settings
 import tkinter as tk
 
-class GUI(tk.Tk): 
+class Gui(tk.Tk): 
 	'''GUI class handles the creation and toggling between the settings page 
 	and dashboard page. This is the parent class for both pages. The arguement
 	is 'thermostat' which is the thermostat object created at the beginning of 

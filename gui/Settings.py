@@ -23,7 +23,7 @@ class Settings(tk.Frame):
 		self.config(bg='#121212')
 
 		#initialize thermostat in order to run functions
-		self._thermostat = thermostat
+		self._therm = thermostat
 
 		#get current path to find images
 		curr_path = os.path.dirname(os.path.realpath(__file__))
@@ -45,9 +45,8 @@ class Settings(tk.Frame):
 		self.time_label.grid(column=1, row=0, sticky='new', columnspan=2, pady=5)
 
 		#create current temperature label and display
-		self.curr_temp = self._thermostat.curr_temp
 		self.curr_temp_lbl = tk.Label(self, font=('calibri', 32), bg='#121212', 
-									  fg='white', text=str(self.curr_temp) + '°')
+									  fg='white', text=str(self._therm.curr_temp) + '°')
 		self.curr_temp_lbl.grid(column=3, row=0, sticky='ne', padx=10, pady=5)
 
 		#create left and right side of settings page
@@ -57,9 +56,6 @@ class Settings(tk.Frame):
 		#variables to stop updates when not on page
 		self.time_stopper = None
 		self.temp_stopper = None
-		
-		#call the update functions
-		self.starter()
 
 # --------------------- End Init Function  ---------------------
 
@@ -72,9 +68,13 @@ class Settings(tk.Frame):
 
 	def update_curr_temp(self):
 		'''Function to update current temperature label'''
-		self.curr_temp = self._thermostat.curr_temp
-		self.curr_temp_lbl.config(text=str(self.curr_temp) + '°')
-		self.temp_stopper = self.curr_temp_lbl.after(200, self.update_curr_temp)
+		self.curr_temp_lbl.config(text=str(self._therm.update_curr_temp()) + '°')
+		self.temp_stopper = self.curr_temp_lbl.after(3000, self.update_curr_temp)
+
+	def update_curr_temp_degree(self):
+		'''Function to update current temperature degree (from SettingsRight)'''
+		self.curr_temp_lbl.config(text=str(self._therm.update_curr_temp()) + '°')
+		self.left.update_temp_output()
 
 	def stopper(self):
 		'''Stop all updates'''

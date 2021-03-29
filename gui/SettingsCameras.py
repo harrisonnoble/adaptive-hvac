@@ -46,21 +46,22 @@ class SettingsCameras(tk.Frame):
 # --------------------- Helper Functions  ---------------------
 
 	def update_imgs(self):
-		#get image from camera and display on the page
+		'''get image from camera/thermal camera and display on the page'''
 		self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
 		self.cam_img.config(image=self.picture)
 
 		#TODO: write code to update thermal camera output
 
-		self.stopper_img = self.cam_img.after(500, self.update_imgs)
+		self.stopper_img = self.after(500, self.update_imgs)
 
 	def stopper(self):
-		#stop updating camera outputs
+		'''function to stop updating camera outputs'''
 		if self.stopper_img:
-			self.cam_img.after_cancel(self.stopper_img)
+			self.after_cancel(self.stopper_img)
 			self.stopper_img = None
 
 	def starter(self):
+		'''function to start camera update function'''
 		self.update_imgs()
 
 # --------------------- End Helper Functions  ---------------------

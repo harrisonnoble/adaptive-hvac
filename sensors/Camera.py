@@ -11,12 +11,11 @@ from picamera.exc import PiCameraRuntimeError
 
 class Camera:
 	'''Camera class interfaces with raspberry pi camera module. Contains the 
-	machine learning model to determine number of people in the room.'''
+	machine learning model to determine number of people in the room'''
 
 # --------------------- Init Function  ---------------------  
 
 	def __init__(self):
-		
 		#create face and profile classifiers
 		self._face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 		self._profile_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_profileface.xml")
@@ -26,9 +25,6 @@ class Camera:
 		#create memory stream so photos dont have to be saved as files
 		self._stream = io.BytesIO()
 
-		#create camera
-		#self._camera = PiCamera()
-
 		self.streaming_img = False
 
 # --------------------- End Init Function  ---------------------  
@@ -36,8 +32,7 @@ class Camera:
 # --------------------- Helper Functions  ---------------------  
 
 	def _detect_people(self, write_img=False):
-		'''Function to determine number of people in the room'''
-
+		'''Function to detect number of people in the room'''
 		#adjust camera settings and send the image to memory stream
 		if not self.streaming_img:
 			try:
@@ -96,6 +91,7 @@ class Camera:
 		self._stream.truncate(0)
 
 	def get_img(self):
+		'''function that returns memory stream of the camera image'''
 		#adjust camera settings and send the image to memory stream
 		try:
 			with PiCamera() as camera:
@@ -115,14 +111,12 @@ class Camera:
 		self._stream.truncate(0)
 
 		return image
-
-	def detect_people(self):
-		self._detect_people()
-		return self._num_people
-		
+	
+	#getter
 	@property
 	def num_people(self):
-		'''Function that returns number of people in the room'''
+		'''property that runs the facial detection and returns number of people'''
+		self._detect_people()
 		return self._num_people
 
 # --------------------- End Helper Functions  ---------------------  
