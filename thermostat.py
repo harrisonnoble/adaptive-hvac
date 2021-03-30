@@ -46,6 +46,8 @@ class Thermostat:
         self.motion_sensor.set_motion_func(self.motion_func)
         #bind no motion to updating motion variable to false
         self.motion_sensor.set_no_motion_func(self.no_motion_func)
+        #bind sound detection to updating sound variable
+        self.audio_sensor.set_sound_func(self.sound_func)
 
         self._app = Gui(self)
         self._app.title('Thermostat')
@@ -87,6 +89,10 @@ class Thermostat:
     def no_motion_func(self):
         '''function to run when motion is not detected, updates motion value to false'''
         self._motion = self.motion_sensor.motion
+
+    def sound_func(self):
+        '''function to run when audio is detectued, updates sound variable'''
+        self._sound = self.audio_sensor.sound
 
     def update_num_people(self):
         '''function to detect number of people and update value'''

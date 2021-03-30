@@ -27,8 +27,12 @@ class SettingsCameras(tk.Frame):
 								  bg='#525252', fg='white')
 		self.cam_title.grid(row=0, column=0, columnspan=2, sticky='n')
 
-		self.picture = ImageTk.PhotoImage(image= Image.fromarray(self._therm.get_img()))
-		self.cam_img = tk.Label(self, image=self.picture)
+		try:
+			self.picture = ImageTk.PhotoImage(image= Image.fromarray(self._therm.get_img()))
+			self.cam_img = tk.Label(self, image=self.picture)
+		except:
+			print('Error displaying camera output')
+
 		self.cam_img.grid(row=0, column=0, rowspan=2, columnspan=2)
 
 		#add title for thermal camera and display output
@@ -47,8 +51,11 @@ class SettingsCameras(tk.Frame):
 
 	def update_imgs(self):
 		'''get image from camera/thermal camera and display on the page'''
-		self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
-		self.cam_img.config(image=self.picture)
+		try:
+			self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
+			self.cam_img.config(image=self.picture)
+		except:
+			print('Error displaying camera output')
 
 		#TODO: write code to update thermal camera output
 
