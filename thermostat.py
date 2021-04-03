@@ -8,6 +8,7 @@ from sensors.Camera import Camera
 from sensors.MotionSensor import MotionSensor
 from sensors.TempSensor import TempSensor
 from sensors.ThermCamera import ThermalCamera
+from sensors.DistanceSensor import DistanceSensor
 import math
 
 class Thermostat:
@@ -25,6 +26,7 @@ class Thermostat:
         self.motion_sensor = MotionSensor()
         self.temp_sensor = TempSensor()
         self.therm_camera = ThermalCamera()
+        self.distance_sensor = DistanceSensor()
         self.camera = Camera()
 
         #initialize all needed variables for thermostat execution
@@ -202,6 +204,19 @@ class Thermostat:
     @property
     def system(self):
         return self._system
+
+    #setters
+    @min_temp.setter
+    def min_temp(self, t):
+        self._min_temp = t
+        if self._desired_temp < self._min_temp:
+            self._desired_temp = self._min_temp
+
+    @max_temp.setter
+    def max_temp(self, t):
+        self._max_temp = t
+        if self._desired_temp > self._max_temp:
+            self._desired_temp = self._max_temp
 
     def algorithm(self):
         '''main algorithm of the thermostat, handles all aspects of thermostat logic'''

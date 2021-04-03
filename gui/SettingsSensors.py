@@ -56,7 +56,6 @@ class SettingsSensors(tk.Frame):
 
 		#variable used to stop sensors from updating
 		self.stopper_sensors = None
-		self.stopper_temp = None
 
 # --------------------- End Init Function  ---------------------
 
@@ -72,25 +71,16 @@ class SettingsSensors(tk.Frame):
 
 	def update_temp(self):
 		'''function to update temperature output'''
-		self.temp_sensor.config(text=str(self._therm.update_curr_temp()) + '°')
-		self.stopper_temp = self.temp_sensor.after(3000, self.update_temp)
-
-	def update_temp_degree(self):
-		'''function to only update temperature output without repeating function call'''
-		self.temp_sensor.config(text=str(self._therm.update_curr_temp()) + '°')
+		self.temp_sensor.config(text=str(self._therm.curr_temp) + '°')
 
 	def stopper(self):
 		'''function to stop update functions'''
 		if self.stopper_sensors:
 			self.after_cancel(self.stopper_sensors)
 			self.stopper_sensors = None
-		if self.stopper_temp:
-			self.temp_sensor.after_cancel(self.stopper_temp)
-			self.stopper_temp = None
 
 	def starter(self):
 		'''function to start all update functions'''
 		self.update_sensors()
-		self.update_temp()
 
 # --------------------- End Helper Functions  ---------------------

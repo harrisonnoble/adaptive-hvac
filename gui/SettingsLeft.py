@@ -88,6 +88,6 @@ class SettingsLeft(tk.Frame):
 	def update_temp_output(self):
 		'''Intermediary function to update temperature label in sensor page'''
 		if self._view == 'Sensor':
-			self.sensors.update_temp_degree()
+			self.sensors.update_temp()
 
 # --------------------- End Helper Functions  ---------------------

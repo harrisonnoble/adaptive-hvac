@@ -68,7 +68,9 @@ class Settings(tk.Frame):
 
 	def update_curr_temp(self):
 		'''Function to update current temperature label'''
-		self.curr_temp_lbl.config(text=str(self._therm.update_curr_temp()) + '°')
+		self._therm.update_curr_temp()
+		self.curr_temp_lbl.config(text=str(self._therm.curr_temp) + '°')
+		self.left.update_temp_output()
 		self.temp_stopper = self.curr_temp_lbl.after(3000, self.update_curr_temp)
 
 	def update_curr_temp_degree(self):

@@ -5,6 +5,7 @@ import tkinter as tk
 import sys
 import os
 import time
+from utils.tkSliderWidget import Slider
 
 class SettingsRight(tk.Frame):
 	'''SettingsRight handles displaying the right side of the settings page. Arguements 
@@ -65,6 +66,11 @@ class SettingsRight(tk.Frame):
 								   font=('calibri', 14),
 								   bg='#525252', fg='white')
 		self.temp_range.grid(row=3, column=0, sticky='w', padx=(10, 0))
+		
+		self.temp_slider = Slider(self, width=180, height=50, min_val=50, max_val=85, #min 50 deg f, max 85 deg f
+								  init_lis=[self._therm.min_temp, self._therm.max_temp], show_value=True)
+		self.temp_slider.grid(row=3, column=1, columnspan=2)
+		self.temp_slider.canv.bind('<ButtonRelease-1>', lambda e: self.get_temp_vals())
 
 		#fahrenheit or celcius setting
 		self.temp_option = tk.Label(self, text='Temp Reading',
@@ -119,6 +125,13 @@ class SettingsRight(tk.Frame):
 		time.sleep(2)
 		os.execv(sys.executable, ['python3'] + sys.argv)
 
+	def get_temp_vals(self):
+		'''function to update max and min temperature values'''
+		temps = self.temp_slider.getValues()
+		self._therm.min_temp = round(temps[0])
+		self._therm.max_temp = round(temps[1])
+		print(self._therm.min_temp, self._therm.max_temp)
+
 	def toggle_temp(self):
 		'''Toggle between degrees C or F and also update temperature outputs'''
 		if self._therm.degree == 'F':
@@ -129,6 +142,7 @@ class SettingsRight(tk.Frame):
 			self.c_btn.config(bg='#353535', fg='#cdcdcd')
 		self._therm.toggle_degree()
 		self._parent.update_curr_temp_degree()
+		self.update_slider()
 
 	def toggle_mode(self):
 		'''Toggle between adaptive and manual mode'''
@@ -139,5 +153,16 @@ class SettingsRight(tk.Frame):
 			self.adaptive_btn.config(bg='#cdcdcd', fg='#353535')
 			self.manual_btn.config(bg='#353535', fg='#cdcdcd')
 		self._therm.toggle_system()
+
+	def update_slider(self):
+		'''Function to update slider between F and C'''
+		if self._therm.degree == 'F':
+			self.temp_slider = Slider(self, width=180, height=50, min_val=50, max_val=85, #min 50 deg f, max 85 deg f
+								      init_lis=[self._therm.min_temp, self._therm.max_temp], show_value=True)
+		else:
+			self.temp_slider = Slider(self, width=180, height=50, min_val=10, max_val=29, #min 10 deg c, max 29 deg c
+								  	  init_lis=[self._therm.min_temp, self._therm.max_temp], show_value=True)
+		self.temp_slider.grid(row=3, column=1, columnspan=2)
+		self.temp_slider.canv.bind('<ButtonRelease-1>', lambda e: self.get_temp_vals())
 
 # --------------------- End Helper Functions  ---------------------

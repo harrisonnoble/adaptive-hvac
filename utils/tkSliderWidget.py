@@ -5,13 +5,13 @@ from tkinter import *
 from tkinter.ttk import *
 
 class Slider(Frame):
-    LINE_COLOR = "#476b6b"
+    LINE_COLOR = "#353535"
     LINE_WIDTH = 3
-    BAR_COLOR_INNER = "#5c8a8a"
-    BAR_COLOR_OUTTER = "#c2d6d6"
-    BAR_RADIUS = 10
+    BAR_COLOR_INNER = "white"
+    BAR_COLOR_OUTTER = "white"
+    BAR_RADIUS = 8
     BAR_RADIUS_INNER = BAR_RADIUS-5
-    DIGIT_PRECISION = '.1f' # for showing in the canvas
+    DIGIT_PRECISION = '.0f' # for showing in the canvas
     def __init__(self, master, width = 400, height = 80, min_val = 0, max_val = 1, init_lis = None, show_value = True):
         Frame.__init__(self, master, height = height, width = width)
         self.master = master
@@ -49,6 +49,7 @@ class Slider(Frame):
         for bar in self.bars:
             bar["Ids"] = self.__addBar(bar["Pos"])
 
+        self.canv.config(bg='#525252', highlightthickness=0)
 
     def getValues(self):
         values = [bar["Value"] for bar in self.bars]
@@ -90,18 +91,35 @@ class Slider(Frame):
         if self.show_value:
             y_value = y+Slider.BAR_RADIUS+8
             value = pos*(self.max_val - self.min_val)+self.min_val
-            id_value = self.canv.create_text(x,y_value, text = format(value, Slider.DIGIT_PRECISION))
+            id_value = self.canv.create_text(x,y_value, text = format(value, Slider.DIGIT_PRECISION), fill='white')
             return [id_outer, id_inner, id_value]
         else:
             return [id_outer, id_inner]
 
     def __moveBar(self, idx, pos):
+        newval = pos*(self.max_val - self.min_val)+self.min_val
+
+        if idx == 0:
+            if self.min_val == 50:
+                if round(newval) + 4.5 > round(self.bars[1]['Value']):
+                    return
+            elif self.min_val == 10:
+                if round(newval) + 2.5 > round(self.bars[1]['Value']):
+                    return
+        else:
+            if self.min_val == 50:
+                if round(self.bars[0]['Value']) + 4.5 > round(newval):
+                    return
+            elif self.min_val == 10:
+                if round(self.bars[0]['Value']) + 2.5 > round(newval):
+                    return
+
         ids = self.bars[idx]["Ids"]
         for id in ids:
             self.canv.delete(id)
         self.bars[idx]["Ids"] = self.__addBar(pos)
         self.bars[idx]["Pos"] = pos
-        self.bars[idx]["Value"] = pos*(self.max_val - self.min_val)+self.min_val
+        self.bars[idx]["Value"] = newval
 
     def __calcPos(self, x):
         """calculate position from x coordinate"""
@@ -112,14 +130,6 @@ class Slider(Frame):
             return 1
         else:
             return pos
-
-    def __getValue(self, idx):
-        """#######Not used function#####"""
-        bar = self.bars[idx]
-        ids = bar["Ids"]
-        x = self.canv.coords(ids[0])[0] + Slider.BAR_RADIUS
-        pos = self.__calcPos(x)
-        return pos*(self.max_val - self.min_val)+self.min_val
 
     def __checkSelection(self, x, y):
         """
