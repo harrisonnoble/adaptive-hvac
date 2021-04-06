@@ -38,7 +38,7 @@ class Thermostat:
         self._desired_temp = self._min_temp
         self._num_people = 0
         self._motion = self.motion_sensor.motion
-        self._room_size = 200
+        self._room_size = self.distance_sensor.distance ** 2
         self._sound = self.audio_sensor.sound
         self._mode = 'Heat'
         self._fan = False
@@ -126,6 +126,11 @@ class Thermostat:
         '''Reads temperature sensor, updates curr_temp variable, and returns value'''
         self._curr_temp = self.temp_sensor.temp
         return self._curr_temp
+
+    def update_room_size(self):
+        '''Reads distance sensor and updates room_size variable'''
+        self._room_size = self.distance_sensor.distance ** 2
+        return self._room_size
 
     def inc_desired_temp(self):
         '''Increments desired temperature by 1 degree'''

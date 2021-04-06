@@ -7,12 +7,16 @@ class DistanceSensor:
 # --------------------- Init Function  ---------------------  
 
 	def __init__(self):
-		pass
+
+		self._distance = 0
 
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  ---------------------  
 
-
+	@property
+	def distance(self):
+		'''property to get the distance reading'''
+		return self._distance
 
 # --------------------- End Helper Functions  ---------------------  
