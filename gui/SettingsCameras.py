@@ -27,9 +27,10 @@ class SettingsCameras(tk.Frame):
 								  bg='#525252', fg='white')
 		self.cam_title.grid(row=0, column=0, columnspan=2, sticky='n')
 
+		self.cam_img = tk.Label(self)
 		try:
 			self.picture = ImageTk.PhotoImage(image= Image.fromarray(self._therm.get_img()))
-			self.cam_img = tk.Label(self, image=self.picture)
+			self.cam_img.config(image=self.picture)
 		except:
 			print('Error displaying camera output')
 

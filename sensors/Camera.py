@@ -5,9 +5,6 @@ import io
 import numpy as np
 import cv2 
 from picamera import PiCamera
-import time
-
-from picamera.exc import PiCameraRuntimeError
 
 class Camera:
 	'''Camera class interfaces with raspberry pi camera module. Contains the 

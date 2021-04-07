@@ -12,19 +12,18 @@ class TempSensor:
 		self._temperature = 0.
 		self._mode = 'F'
 
-		self.update_temp()
+		self._update_temp()
 
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  ---------------------  
 
-	def update_temp(self):
-		'''Function to update the temperature variable.
-		Uses bme280.py, a script made for the temperature sensor model'''
+	def _update_temp(self):
+		'''Function to update the temperature variable. Uses bme280.py, a script made for the temperature sensor'''
 		temp, _, _ = bme.readBME280All()
 		self._temperature = temp
 
-	def convert_to_f(self):
+	def _convert_to_f(self):
 		'''Function to return temperature value in fahrenheit'''
 		return round(((self._temperature * 1.8) + 32), 1)
 
@@ -42,10 +41,10 @@ class TempSensor:
 	@property
 	def temp(self):
 		'''property to update temperature via the sensor and return the value'''
-		self.update_temp()
+		self._update_temp()
 		# Depending on temperature mode (celcius or fahrenheit) return correct value
 		if self._mode == 'C':
 			return round(self._temperature, 1)
-		return self.convert_to_f()
+		return self._convert_to_f()
 
 # --------------------- End Helper Functions  ---------------------  

@@ -13,8 +13,8 @@ class MotionSensor:
 		self._motion = False
 
 		self._sensor = MotionSense(4)
-		self._sensor.when_motion = self.on_motion
-		self._sensor.when_no_motion = self.no_motion
+		self._sensor.when_motion = self._on_motion
+		self._sensor.when_no_motion = self._no_motion
 
 		self._motion_func = None
 		self._no_motion_func = None
@@ -22,6 +22,19 @@ class MotionSensor:
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  ---------------------  
+
+	def _on_motion(self):
+		'''Function that is called when motion sensor detects motion'''
+		self._motion = True
+		if self._motion_func:
+			self._motion_func()
+		time.sleep(5)
+
+	def _no_motion(self):
+		'''Function called when motion sensor stops detecting motion'''
+		self._motion = False
+		if self._no_motion_func:
+			self._no_motion_func()
 
 	def set_motion_func(self, func):
 		'''Function used to add an additional function call when motion is detected.'''
@@ -32,19 +45,6 @@ class MotionSensor:
 		'''Function used to add an additional function call when no motion is detected.'''
 		if func:
 			self._no_motion_func = func
-
-	def on_motion(self):
-		'''Function that is called when motion sensor detects motion'''
-		self._motion = True
-		if self._motion_func:
-			self._motion_func()
-		time.sleep(5)
-
-	def no_motion(self):
-		'''Function called when motion sensor stops detecting motion'''
-		self._motion = False
-		if self._no_motion_func:
-			self._no_motion_func()
 
 	@property
 	def motion(self):

@@ -9,7 +9,6 @@ from sensors.MotionSensor import MotionSensor
 from sensors.TempSensor import TempSensor
 from sensors.ThermCamera import ThermalCamera
 from sensors.DistanceSensor import DistanceSensor
-import math
 
 class Thermostat:
     '''Thermostat class creates UI and all sensors. This is the main

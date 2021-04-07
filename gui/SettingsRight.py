@@ -156,7 +156,7 @@ class SettingsRight(tk.Frame):
 		else:
 			self.temp_slider = Slider(self, width=180, height=50, min_val=10, max_val=29, #min 10 deg c, max 29 deg c
 								  	  init_lis=[self._therm.min_temp, self._therm.max_temp], show_value=True)
-		self.temp_slider.grid(row=3, column=1, columnspan=2)
+		self.temp_slider.grid(row=2, column=1, columnspan=2)
 		self.temp_slider.canv.bind('<ButtonRelease-1>', lambda e: self.get_temp_vals())
 
 # --------------------- End Helper Functions  ---------------------
