@@ -71,14 +71,14 @@ class SettingsSensors(tk.Frame):
 
 # --------------------- Helper Functions  ---------------------
 
-	def update_sensors(self):
+	def _update_sensors(self):
 		'''function to update all sensor outputs except temp'''
 		self.motion_sensor.config(text='Motion' if self._therm.motion else 'No Motion')
 		self.audio_sensor.config(text='Detected' if self._therm.sound else 'Not Detected')
 		self.camera.config(text=str(self._therm.num_people))
 		self.room_size_sensor.config(text=str(self._therm.room_size) + ' sq ft.')
 
-		self.stopper_sensors = self.after(200, self.update_sensors)
+		self.stopper_sensors = self.after(200, self._update_sensors)
 
 	def update_temp(self):
 		'''function to update temperature output'''
@@ -92,6 +92,6 @@ class SettingsSensors(tk.Frame):
 
 	def starter(self):
 		'''function to start all update functions'''
-		self.update_sensors()
+		self._update_sensors()
 
 # --------------------- End Helper Functions  ---------------------

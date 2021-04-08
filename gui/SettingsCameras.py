@@ -29,10 +29,10 @@ class SettingsCameras(tk.Frame):
 
 		self.cam_img = tk.Label(self)
 		try:
-			self.picture = ImageTk.PhotoImage(image= Image.fromarray(self._therm.get_img()))
+			self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
 			self.cam_img.config(image=self.picture)
 		except:
-			print('Error displaying camera output')
+			print('Error fetching camera output')
 
 		self.cam_img.grid(row=0, column=0, rowspan=2, columnspan=2)
 
@@ -42,6 +42,13 @@ class SettingsCameras(tk.Frame):
 		self.therm_title.grid(row=2, column=0, columnspan=2, sticky='n')
 
 		#TODO: Thermal camera implementation
+		self.therm_img = tk.Label(self)
+		try:
+			self.picture = ImageTk(imgae=Image.fromarray([]))
+		except:
+			print('Error fetching thermal camera output')
+
+		self.therm_img.grid(row=2, column=0, rowspan=2, columnspan=2)
 		
 		#variable used to stop camera outputs from updating
 		self.stopper_img = None
@@ -50,7 +57,7 @@ class SettingsCameras(tk.Frame):
 
 # --------------------- Helper Functions  ---------------------
 
-	def update_imgs(self):
+	def _update_imgs(self):
 		'''get image from camera/thermal camera and display on the page'''
 		try:
 			self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
@@ -58,9 +65,13 @@ class SettingsCameras(tk.Frame):
 		except:
 			print('Error displaying camera output')
 
-		#TODO: write code to update thermal camera output
+		try:
+			self.picture = ImageTk.PhotoImage(image=Image.fromarray([]))
+			self.therm_img.config(image=self.picture)
+		except:
+			print('Error displaying camera output')
 
-		self.stopper_img = self.after(500, self.update_imgs)
+		self.stopper_img = self.after(500, self._update_imgs)
 
 	def stopper(self):
 		'''function to stop updating camera outputs'''
@@ -70,6 +81,6 @@ class SettingsCameras(tk.Frame):
 
 	def starter(self):
 		'''function to start camera update function'''
-		self.update_imgs()
+		self._update_imgs()
 
 # --------------------- End Helper Functions  ---------------------

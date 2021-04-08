@@ -17,14 +17,14 @@ class DistanceSensor:
 
 		self._distance = 0
 
-		#self.update_distance()
+		#self._update_distance()
 
 
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  ---------------------  
 
-	def update_distance(self):
+	def _update_distance(self):
 		'''function to update the distance reading'''
 		#trigger sensor reading
 		GPIO.output(self._pin_trigger, GPIO.HIGH)

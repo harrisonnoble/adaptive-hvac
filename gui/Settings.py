@@ -61,17 +61,17 @@ class Settings(tk.Frame):
 
 # --------------------- Helper Functions  ---------------------
 
-	def update_time(self):
+	def _update_time(self):
 		'''Function to update the displayed time every 10 seconds'''
 		self.time_label.config(text=strftime('%-I:%M %p'))
-		self.time_stopper = self.time_label.after(10000, self.update_time)
+		self.time_stopper = self.time_label.after(10000, self._update_time)
 
-	def update_curr_temp(self):
+	def _update_curr_temp(self):
 		'''Function to update current temperature label'''
 		self._therm.update_curr_temp()
 		self.curr_temp_lbl.config(text=str(self._therm.curr_temp) + '°')
 		self.left.update_temp_output()
-		self.temp_stopper = self.curr_temp_lbl.after(3000, self.update_curr_temp)
+		self.temp_stopper = self.curr_temp_lbl.after(3000, self._update_curr_temp)
 
 	def update_curr_temp_degree(self):
 		'''Function to update current temperature degree (from SettingsRight)'''
@@ -91,8 +91,8 @@ class Settings(tk.Frame):
 
 	def starter(self):
 		'''Begin updates'''
-		self.update_time()
-		self.update_curr_temp()
+		self._update_time()
+		self._update_curr_temp()
 		self.left.starter()
 
 # --------------------- End Helper Functions  ---------------------

@@ -25,10 +25,10 @@ class SettingsLeft(tk.Frame):
 		#create toggle buttons between sensors and camera
 		self.sensor_btn = tk.Label(self, text='Sensors', font=('calibri', 12),
 								   bg='#cdcdcd', fg='#353535')
-		self.sensor_btn.bind('<Button-1>', lambda e: self.toggle_view('Sensor'))
+		self.sensor_btn.bind('<Button-1>', lambda e: self._toggle_view('Sensor'))
 		self.camera_btn = tk.Label(self, text='Cameras', font=('calibri', 12),
 								   bg='#353535', fg='#cdcdcd')
-		self.camera_btn.bind('<Button-1>', lambda e: self.toggle_view('Camera'))
+		self.camera_btn.bind('<Button-1>', lambda e: self._toggle_view('Camera'))
 
 		#display toggle buttons
 		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 0), padx=(0, 4), ipadx=4)
@@ -41,13 +41,13 @@ class SettingsLeft(tk.Frame):
 		self._therm = thermostat
 
 		self._view = 'Sensor'
-		self.toggle_view('Sensor')
+		self._toggle_view('Sensor')
 
 # --------------------- End Init Function  ---------------------
 
 # --------------------- Helper Functions  ---------------------
 
-	def toggle_view(self, goto):
+	def _toggle_view(self, goto):
 		'''display camera page or sensor page and stop respective update function'''
 		if goto == 'Camera':
 			self.camera_btn.config(bg='#cdcdcd', fg='#353535')
@@ -68,6 +68,11 @@ class SettingsLeft(tk.Frame):
 
 			self._view = goto
 
+	def update_temp_output(self):
+		'''Intermediary function to update temperature label in sensor page'''
+		if self._view == 'Sensor':
+			self.sensors.update_temp()
+
 	def stopper(self):
 		'''stop all update functions'''
 		self.cameras.stopper()
@@ -84,10 +89,5 @@ class SettingsLeft(tk.Frame):
 			self.cameras.stopper()
 			self._therm.camera.streaming_img = False
 			self.sensors.starter()
-
-	def update_temp_output(self):
-		'''Intermediary function to update temperature label in sensor page'''
-		if self._view == 'Sensor':
-			self.sensors.update_temp()
 
 # --------------------- End Helper Functions  ---------------------
