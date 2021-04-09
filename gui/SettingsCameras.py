@@ -44,9 +44,10 @@ class SettingsCameras(tk.Frame):
 		#TODO: Thermal camera implementation
 		self.therm_img = tk.Label(self)
 		try:
-			self.picture = ImageTk(imgae=Image.fromarray([]))
-		except:
-			print('Error fetching thermal camera output')
+			self.therm_picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_therm_img()))
+			self.therm_img.config(image=self.therm_picture)
+		except Exception as e:
+			print('Error fetching thermal camera output', e)
 
 		self.therm_img.grid(row=2, column=0, rowspan=2, columnspan=2)
 		
@@ -66,10 +67,10 @@ class SettingsCameras(tk.Frame):
 			print('Error displaying camera output')
 
 		try:
-			self.picture = ImageTk.PhotoImage(image=Image.fromarray([]))
-			self.therm_img.config(image=self.picture)
+			self.therm_picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_therm_img()))
+			self.therm_img.config(image=self.therm_picture)
 		except:
-			print('Error displaying camera output')
+			print('Error displaying thermal camera output')
 
 		self.stopper_img = self.after(500, self._update_imgs)
 

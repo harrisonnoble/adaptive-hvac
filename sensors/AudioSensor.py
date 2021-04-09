@@ -11,7 +11,7 @@ class AudioSensor:
 
     def __init__(self):
         self._sound = False
-        self._pin = 17
+        self._pin = 27
         self._sound_func = None
 
         GPIO.setmode(GPIO.BCM)

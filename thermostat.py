@@ -156,6 +156,10 @@ class Thermostat:
         '''function to grab the image from the camera'''
         return self.camera.get_img()
 
+    def get_therm_img(self):
+        '''function to grab thermal image from thermal camera'''
+        return self.therm_camera.therm_img
+
     #getters
     @property 
     def is_on(self):
@@ -191,7 +195,7 @@ class Thermostat:
 
     @property
     def room_size(self):
-        return self._room_size
+        return self.update_room_size()
     
     @property
     def sound(self):

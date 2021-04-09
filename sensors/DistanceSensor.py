@@ -10,14 +10,17 @@ class DistanceSensor:
 # --------------------- Init Function  ---------------------  
 
 	def __init__(self):
-		self._pin_trigger = 7
-		self._pin_echo = 11
+		self._pin_trigger = 4
+		self._pin_echo = 17
 
-		#TODO: Set up GPIO to read sensor
+		GPIO.setup(self._pin_trigger, GPIO.OUT)
+		GPIO.setup(self._pin_echo, GPIO.IN)
+
+		GPIO.output(self._pin_trigger, GPIO.LOW)
 
 		self._distance = 0
 
-		#self._update_distance()
+		self._update_distance()
 
 
 # --------------------- End Init Function  ---------------------  
@@ -45,6 +48,7 @@ class DistanceSensor:
 	@property
 	def distance(self):
 		'''property to get the distance reading'''
+		self._update_distance()
 		return self._distance
 
 # --------------------- End Helper Functions  ---------------------  
