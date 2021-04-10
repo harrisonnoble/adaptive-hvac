@@ -21,17 +21,15 @@ class Settings(tk.Frame):
 		#initialization for frame object (dashboard UI)
 		tk.Frame.__init__(self, parent)   
 		self.config(bg='#121212')
+		self.rowconfigure(0, weight=1)
+		self.rowconfigure(1, weight=15)
+		self.columnconfigure((0, 1, 2, 3), weight=1, min='200')
 
 		#initialize thermostat in order to run functions
 		self._therm = thermostat
 
 		#get current path to find images
 		curr_path = os.path.dirname(os.path.realpath(__file__))
-
-		#layout management
-		self.rowconfigure(0, weight=1)
-		self.rowconfigure((1, 2, 3), weight=5)
-		self.columnconfigure((0, 1, 2, 3), weight=1, min='200')
 
 		#create back button and display
 		self.back_img = tk.PhotoImage(file=curr_path + '/imgs/back.png').subsample(4, 4)

@@ -39,7 +39,7 @@ class Thermostat:
         self._motion = self.motion_sensor.motion
         self._room_size = self.distance_sensor.distance ** 2
         self._sound = self.audio_sensor.sound
-        self._mode = 'Heat'
+        self._is_heating = True
         self._fan = False
         self._system = 'Adaptive'
 
@@ -145,8 +145,8 @@ class Thermostat:
 
     def switch_mode(self):
         '''Toggles thermostat between 'Heat' and 'Cool' modes and returns value'''
-        self._mode = 'Heat' if self._mode == 'Cool' else 'Cool'
-        return self._mode
+        self._is_heating = not self._is_heating
+        return self._is_heating
 
     def switch_system(self):
         '''Toggles system between 'Adaptive' and 'Manual' modes and returns value'''
@@ -203,7 +203,7 @@ class Thermostat:
 
     @property
     def mode(self):
-        return self._mode
+        return self._is_heating
 
     @property
     def fan(self):

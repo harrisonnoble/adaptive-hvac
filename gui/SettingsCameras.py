@@ -3,6 +3,8 @@
 
 import tkinter as tk
 from PIL import Image, ImageTk
+import numpy as np
+import os
 
 class SettingsCameras(tk.Frame):
 	'''SettingsCameras handles displaying the camera outputs in the left side of the settings
@@ -15,9 +17,10 @@ class SettingsCameras(tk.Frame):
 		#initialize frame and handle format
 		tk.Frame.__init__(self, parent)
 		self.config(bg='#525252')
-		self.grid(row=1, column=0, rowspan=6, columnspan = 2, sticky='nesw')
-		self.rowconfigure((0, 1, 2, 3, 4), weight=1)
-		self.columnconfigure((0, 1), weight=1)
+		self.grid(row=1, column=0, columnspan = 2, sticky='nesw')
+		self.rowconfigure((0, 1), weight=1)
+		self.columnconfigure(0, weight=1)
+		self.columnconfigure(1, weight=2)
 
 		#store thermostat object
 		self._therm = thermostat
@@ -25,7 +28,7 @@ class SettingsCameras(tk.Frame):
 		#add title for camera and display camera output
 		self.cam_title = tk.Label(self, text='Camera', font=('calibri', 12),
 								  bg='#525252', fg='white')
-		self.cam_title.grid(row=0, column=0, columnspan=2, sticky='n')
+		self.cam_title.grid(row=0, column=0, sticky='w', padx=(5, 0))
 
 		self.cam_img = tk.Label(self)
 		try:
@@ -34,22 +37,21 @@ class SettingsCameras(tk.Frame):
 		except:
 			print('Error fetching camera output')
 
-		self.cam_img.grid(row=0, column=0, rowspan=2, columnspan=2)
+		self.cam_img.grid(row=0, column=1, padx=(0, 5))
 
 		#add title for thermal camera and display output
 		self.therm_title = tk.Label(self, text='Thermal Camera', font=('calibri', 12),
 								    bg='#525252', fg='white')
-		self.therm_title.grid(row=2, column=0, columnspan=2, sticky='n')
+		self.therm_title.grid(row=1, column=0, sticky='w', padx=(5, 0))
 
-		#TODO: Thermal camera implementation
 		self.therm_img = tk.Label(self)
 		try:
 			self.therm_picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_therm_img()))
 			self.therm_img.config(image=self.therm_picture)
-		except Exception as e:
-			print('Error fetching thermal camera output', e)
+		except:
+			print('Error fetching thermal camera output')
 
-		self.therm_img.grid(row=2, column=0, rowspan=2, columnspan=2)
+		self.therm_img.grid(row=1, column=1, padx=(0, 5))
 		
 		#variable used to stop camera outputs from updating
 		self.stopper_img = None

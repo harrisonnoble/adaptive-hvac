@@ -14,7 +14,7 @@ class SettingsSensors(tk.Frame):
 		#initialize frame and handle format
 		tk.Frame.__init__(self, parent)
 		self.config(bg='#525252')
-		self.grid(row=1, column=0, rowspan=5, columnspan = 2, sticky='nesw')
+		self.grid(row=1, column=0, columnspan = 2, sticky='nesw')
 		self.rowconfigure((0, 1, 2, 3, 4), weight=1)
 		self.columnconfigure((0, 1), weight=1)
 

@@ -18,8 +18,7 @@ class SettingsRight(tk.Frame):
 		#initialize frame and handle format
 		tk.Frame.__init__(self, parent)
 		self.config(bg='#525252')
-		self.grid(row=1, column=2, rowspan=3, columnspan = 2, 
-				  sticky='nesw', pady=(0, 20), padx=(5, 15))
+		self.grid(row=1, column=2, columnspan = 2, sticky='nesw', pady=(0, 20), padx=(5, 15))
 		self.columnconfigure(0, weight=2)
 		self.columnconfigure((1, 2), weight=1)
 		self.rowconfigure((0, 1, 2, 3, 4), weight=1)
@@ -63,7 +62,7 @@ class SettingsRight(tk.Frame):
 		
 		self.temp_slider = Slider(self, width=180, height=50, min_val=50, max_val=85, #min 50 deg f, max 85 deg f
 								  init_lis=[self._therm.min_temp, self._therm.max_temp], show_value=True)
-		self.temp_slider.grid(row=2, column=1, columnspan=2)
+		self.temp_slider.grid(row=2, column=1, columnspan=2, padx=(0, 5))
 		self.temp_slider.canv.bind('<ButtonRelease-1>', lambda e: self._get_temp_vals())
 
 		#fahrenheit or celcius setting
@@ -155,7 +154,7 @@ class SettingsRight(tk.Frame):
 		else:
 			self.temp_slider = Slider(self, width=180, height=50, min_val=10, max_val=29, #min 10 deg c, max 29 deg c
 								  	  init_lis=[self._therm.min_temp, self._therm.max_temp], show_value=True)
-		self.temp_slider.grid(row=2, column=1, columnspan=2)
+		self.temp_slider.grid(row=2, column=1, columnspan=2, padx=(0, 5))
 		self.temp_slider.canv.bind('<ButtonRelease-1>', lambda e: self._get_temp_vals())
 
 # --------------------- End Helper Functions  ---------------------
