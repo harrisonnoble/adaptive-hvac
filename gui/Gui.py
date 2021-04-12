@@ -4,6 +4,7 @@
 from gui.Dashboard import Dashboard
 from gui.Settings import Settings
 import tkinter as tk
+import sys
 
 class Gui(tk.Tk): 
 	'''GUI class handles the creation and toggling between the settings page 
@@ -15,9 +16,15 @@ class Gui(tk.Tk):
 
 	def __init__(self, thermostat): 
 		# create the container window and set the size
-		tk.Tk.__init__(self)  
+		tk.Tk.__init__(self)
 		container = tk.Frame(self)  
-		tk.Tk.geometry(self,'800x480')
+
+		# if -f arguement, run in fullscreen mode
+		if len(sys.argv) == 2 and sys.argv[1] == '-f':
+			self.attributes('-fullscreen', True)
+			self.bind('<Escape>', lambda e: self.attributes('-fullscreen', False))
+		else:
+			self.geometry('800x480')
 
 		# formatting for the window
 		container.pack(side='top', fill='both', expand = True) 
@@ -34,9 +41,17 @@ class Gui(tk.Tk):
 		#initially display the main dashboard
 		self.show_dashboard()
 
+		#call the thermostat algorithm function every second
+		self._therm = thermostat
+		self.algo_stopper = self.after(1000, self._run_algorithm)
+
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  ---------------------  
+
+	def _run_algorithm(self):
+		self._therm.algorithm()
+		self.algo_stopper = self.after(1000, self._run_algorithm)
 
 	def show_dashboard(self):
 		'''Toggle to the main dashboard'''

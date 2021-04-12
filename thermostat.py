@@ -9,6 +9,7 @@ from sensors.MotionSensor import MotionSensor
 from sensors.TempSensor import TempSensor
 from sensors.ThermCamera import ThermalCamera
 from sensors.DistanceSensor import DistanceSensor
+from sensors.LEDs import LEDs
 
 class Thermostat:
     '''Thermostat class creates UI and all sensors. This is the main
@@ -27,6 +28,7 @@ class Thermostat:
         self.therm_camera = ThermalCamera()
         self.distance_sensor = DistanceSensor()
         self.camera = Camera()
+        self.leds = LEDs()
 
         #initialize all needed variables for thermostat execution
         self._is_on = True
@@ -228,7 +230,16 @@ class Thermostat:
 
     def algorithm(self):
         '''main algorithm of the thermostat, handles all aspects of thermostat logic'''
-        pass
+        #make sure thermostat is on before running algorithm
+        if not self.is_on:
+            return
+
+        if self._system == 'Adaptive':
+            #TODO: Adaptive functionality
+            return
+        elif self._system == 'Manual':
+            #TODO: Manual functionality
+            return
     
 # --------------------- End Helper Functions  ---------------------  
 
