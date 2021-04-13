@@ -33,10 +33,12 @@ class SettingsRight(tk.Frame):
 		self.pwr_option.grid(row=0, column=0, sticky='w', padx=(10, 0))
 
 		self.on_btn = tk.Label(self, text='On', font=('calibri', 14),
-								   bg='#cdcdcd', fg='#353535')
+							   bg='#cdcdcd' if self._therm.is_on else '#353535', 
+							   fg='#353535' if self._therm.is_on else '#cdcdcd')
 		self.on_btn.bind('<Button-1>', lambda e: self._toggle_power())
 		self.off_btn = tk.Label(self, text='Off', font=('calibri', 14),
-								   bg='#353535', fg='#cdcdcd')
+								bg='#353535' if self._therm.is_on else '#cdcdcd', 
+								fg='#cdcdcd' if self._therm.is_on else '#353535')
 		self.off_btn.bind('<Button-1>', lambda e: self._toggle_power())
 
 		self.on_btn.grid(row=0, column=1, sticky='e', padx=(0, 4), ipadx=4)
@@ -59,11 +61,8 @@ class SettingsRight(tk.Frame):
 								   font=('calibri', 14),
 								   bg='#525252', fg='white')
 		self.temp_range.grid(row=2, column=0, sticky='w', padx=(10, 0))
-		
-		self.temp_slider = Slider(self, width=180, height=50, min_val=50, max_val=85, #min 50 deg f, max 85 deg f
-								  init_lis=[self._therm.min_temp, self._therm.max_temp], show_value=True)
-		self.temp_slider.grid(row=2, column=1, columnspan=2, padx=(0, 5))
-		self.temp_slider.canv.bind('<ButtonRelease-1>', lambda e: self._get_temp_vals())
+		#call function that creates slider
+		self._update_slider()
 
 		#fahrenheit or celcius setting
 		self.temp_option = tk.Label(self, text='Temp Reading',
@@ -72,10 +71,12 @@ class SettingsRight(tk.Frame):
 		self.temp_option.grid(row=3, column=0, sticky='w', padx=(10, 0))
 
 		self.f_btn = tk.Label(self, text='F', font=('calibri', 14),
-							  bg='#cdcdcd', fg='#353535')
+							  bg='#cdcdcd' if self._therm.degree == 'F' else '#353535', 
+							  fg='#353535' if self._therm.degree == 'F' else '#cdcdcd')
 		self.f_btn.bind('<Button-1>', lambda e: self._toggle_temp())
 		self.c_btn = tk.Label(self, text='C', font=('calibri', 14),
-							  bg='#353535', fg='#cdcdcd')
+							  bg='#353535' if self._therm.degree == 'F' else '#cdcdcd', 
+							  fg='#cdcdcd' if self._therm.degree == 'F' else '#353535')
 		self.c_btn.bind('<Button-1>', lambda e: self._toggle_temp())
 
 		self.f_btn.grid(row=3, column=1, sticky='e', padx=(0, 4), ipadx=4)
@@ -88,10 +89,12 @@ class SettingsRight(tk.Frame):
 		self.mode_option.grid(row=4, column=0, sticky='w', padx=(10, 0))
 
 		self.adaptive_btn = tk.Label(self, text='Adaptive', font=('calibri', 14),
-								   bg='#cdcdcd', fg='#353535')
+								     bg='#cdcdcd' if self._therm.system == 'Adaptive' else '#353535', 
+								     fg='#353535' if self._therm.system == 'Adaptive' else '#cdcdcd')
 		self.adaptive_btn.bind('<Button-1>', lambda e: self._toggle_mode())
 		self.manual_btn = tk.Label(self, text='Manual', font=('calibri', 14),
-								   bg='#353535', fg='#cdcdcd')
+								   bg='#353535' if self._therm.system == 'Adaptive' else '#cdcdcd', 
+								   fg='#cdcdcd' if self._therm.system == 'Adaptive' else '#353535')
 		self.manual_btn.bind('<Button-1>', lambda e: self._toggle_mode())
 
 		self.adaptive_btn.grid(row=4, column=1, sticky='e', padx=(0, 2), ipadx=2)
@@ -115,6 +118,7 @@ class SettingsRight(tk.Frame):
 		'''function to stop thermostat and run it again'''
 		print('Rebooting...')
 		self._parent.stopper()
+		self._therm.write_config()
 		time.sleep(2)
 		os.execv(sys.executable, ['python3'] + sys.argv)
 

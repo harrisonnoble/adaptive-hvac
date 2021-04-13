@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # thermostat.py
 # written by Harrison Noble
 #THIS IS THE MAIN ENTRYPOINT FOR THE PROGRAM
@@ -10,6 +12,7 @@ from sensors.TempSensor import TempSensor
 from sensors.ThermCamera import ThermalCamera
 from sensors.DistanceSensor import DistanceSensor
 from sensors.LEDs import LEDs
+import configparser
 
 class Thermostat:
     '''Thermostat class creates UI and all sensors. This is the main
@@ -20,51 +23,87 @@ class Thermostat:
 # --------------------- Init Function  ---------------------  
 
     def __init__(self):
+        #first read in the config file
+        self._cfg = self._read_config()
 
         #Initialize all sensors & cameras
         self.audio_sensor = AudioSensor()
         self.motion_sensor = MotionSensor()
-        self.temp_sensor = TempSensor()
+        self.temp_sensor = TempSensor(self._cfg.get('thermostat', 'degree'))
         self.therm_camera = ThermalCamera()
         self.distance_sensor = DistanceSensor()
         self.camera = Camera()
         self.leds = LEDs()
 
         #initialize all needed variables for thermostat execution
-        self._is_on = True
+        self._is_on = self._cfg.getboolean('thermostat', 'on', fallback=str(True))
         self._degrees = self.temp_sensor.mode
-        self._min_temp = 50
-        self._max_temp = 85
+        self._min_temp = self._cfg.getint('thermostat', 'min_temp')
+        self._max_temp = self._cfg.getint('thermostat', 'max_temp')
         self._curr_temp = self.temp_sensor.temp
-        self._desired_temp = self._min_temp
+        self._desired_temp = self._cfg.getint('thermostat', 'desired_temp')
         self._num_people = 0
         self._motion = self.motion_sensor.motion
         self._room_size = self.distance_sensor.distance ** 2
         self._sound = self.audio_sensor.sound
-        self._is_heating = True
-        self._fan = False
-        self._system = 'Adaptive'
+        self._is_heating = self._cfg.getboolean('thermostat', 'heat', fallback=str(True))
+        self._fan = self._cfg.getboolean('thermostat', 'fan', fallback=str(False))
+        self._system = self._cfg.get('thermostat', 'system')
 
-        #bind motion detection to detecting faces and updating motion variable
-        self.motion_sensor.set_motion_func(self.motion_func)
-        #bind no motion to updating motion variable to false
-        self.motion_sensor.set_no_motion_func(self.no_motion_func)
+        #bind motion/no motion detection functions
+        self.motion_sensor.set_motion_func(self._motion_func)
+        self.motion_sensor.set_no_motion_func(self._no_motion_func)
+
         #bind sound detection to updating sound variable
-        self.audio_sensor.set_sound_func(self.sound_func)
+        self.audio_sensor.set_sound_func(self._sound_func)
 
+        #create GUI and start
         self._app = Gui(self)
         self._app.title('Thermostat')
-
-        self.start()
+        self._app.mainloop()
 
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  ---------------------  
 
-    def start(self):
-        '''Function to start execution of the thermostat.
-        Starts the main loop of the user interface'''
-        self._app.mainloop()
+    def _motion_func(self):
+        '''function that runs when motion is detected, updates number of people
+        and sets motion value to true'''
+        self._motion = self.motion_sensor.motion
+        self.update_num_people()
+
+    def _no_motion_func(self):
+        '''function to run when motion is not detected, updates motion value to false'''
+        self._motion = self.motion_sensor.motion
+
+    def _sound_func(self):
+        '''function to run when audio is detectued, updates sound variable'''
+        self._sound = self.audio_sensor.sound
+
+    def _read_config(self):
+        '''Function to get configurable variables from config.ini file'''
+        cfg = configparser.ConfigParser(allow_no_value=True)
+        cfg.read('config.cfg')
+        
+        #return config
+        return cfg
+
+    def write_config(self):
+        '''Function to write configurable variables to the config.ini file'''
+        #update config variables
+        self._cfg.set('thermostat', 'on', str(self._is_on))
+        self._cfg.set('thermostat', 'degree', str(self._degrees))
+        self._cfg.set('thermostat', 'min_temp', str(self._min_temp))
+        self._cfg.set('thermostat', 'max_temp', str(self._max_temp))
+        self._cfg.set('thermostat', 'desired_temp', str(self._desired_temp))
+        self._cfg.set('thermostat', 'heat', str(self._is_heating))
+        self._cfg.set('thermostat', 'fan', str(self._fan))
+        self._cfg.set('thermostat', 'system', str(self._system))
+
+        #write to config
+        with open('config.cfg', 'w') as configfile:
+            configfile.write('; DO NOT EDIT\n')
+            self._cfg.write(configfile)
 
     def toggle_on(self):
         '''function to toggle thermostat power (returns true if on, false if off)'''
@@ -82,20 +121,6 @@ class Thermostat:
         '''function to update temperature value'''
         self._curr_temp = self.temp_sensor.temp
         return self._curr_temp
-
-    def motion_func(self):
-        '''function that runs when motion is detected, updates number of people
-        and sets motion value to true'''
-        self._motion = self.motion_sensor.motion
-        self.update_num_people()
-
-    def no_motion_func(self):
-        '''function to run when motion is not detected, updates motion value to false'''
-        self._motion = self.motion_sensor.motion
-
-    def sound_func(self):
-        '''function to run when audio is detectued, updates sound variable'''
-        self._sound = self.audio_sensor.sound
 
     def update_num_people(self):
         '''function to detect number of people and update value'''

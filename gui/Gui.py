@@ -19,6 +19,8 @@ class Gui(tk.Tk):
 		tk.Tk.__init__(self)
 		container = tk.Frame(self)  
 
+		self.protocol('WM_DELETE_WINDOW', self._on_close)
+
 		# if -f arguement, run in fullscreen mode
 		if len(sys.argv) == 2 and sys.argv[1] == '-f':
 			self.attributes('-fullscreen', True)
@@ -49,7 +51,13 @@ class Gui(tk.Tk):
 
 # --------------------- Helper Functions  ---------------------  
 
+	def _on_close(self):
+		'''Function to run when program is closed'''
+		self._therm.write_config()
+		self.destroy()
+
 	def _run_algorithm(self):
+		'''Function that calls the thermostat algorithm'''
 		self._therm.algorithm()
 		self.algo_stopper = self.after(1000, self._run_algorithm)
 

@@ -8,10 +8,14 @@ class TempSensor:
 
 # --------------------- Init Function  ---------------------  
 
-	def __init__(self):
-		self._temperature = 0.
-		self._mode = 'F'
+	def __init__(self, mode=None):
+		#make sure mode is either F or C, defaults to F
+		if mode == 'F' or mode == 'C':
+			self._mode = mode
+		else:
+			self._mode = 'F'
 
+		self._temperature = 0.
 		self._update_temp()
 
 # --------------------- End Init Function  ---------------------  
