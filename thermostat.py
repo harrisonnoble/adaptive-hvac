@@ -83,7 +83,19 @@ class Thermostat:
     def _read_config(self):
         '''Function to get configurable variables from config.ini file'''
         cfg = configparser.ConfigParser(allow_no_value=True)
-        cfg.read('config.cfg')
+        try:
+            cfg.read('config.cfg')
+        except:
+            #error handling
+            cfg.add_section('thermostat')
+            self._cfg.set('thermostat', 'on', str(True))
+            self._cfg.set('thermostat', 'degree', 'F')
+            self._cfg.set('thermostat', 'min_temp', str(50))
+            self._cfg.set('thermostat', 'max_temp', str(85))
+            self._cfg.set('thermostat', 'desired_temp', str(70))
+            self._cfg.set('thermostat', 'heat', str(True))
+            self._cfg.set('thermostat', 'fan', str(False))
+            self._cfg.set('thermostat', 'system', 'Adaptive')
         
         #return config
         return cfg
