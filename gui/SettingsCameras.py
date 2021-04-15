@@ -26,9 +26,9 @@ class SettingsCameras(tk.Frame):
 		self._therm = thermostat
 
 		#add title for camera and display camera output
-		self.cam_title = tk.Label(self, text='Camera', font=('calibri', 12),
+		self.cam_title = tk.Label(self, text='Camera', font=('calibri', 14),
 								  bg='#525252', fg='white')
-		self.cam_title.grid(row=0, column=0, sticky='w', padx=(5, 0))
+		self.cam_title.grid(row=0, column=0, sticky='w', padx=(10, 0))
 
 		self.cam_img = tk.Label(self)
 		try:
@@ -37,12 +37,12 @@ class SettingsCameras(tk.Frame):
 		except:
 			print('Error fetching camera output')
 
-		self.cam_img.grid(row=0, column=1, padx=(0, 5))
+		self.cam_img.grid(row=0, column=1, padx=(0, 10), pady=10)
 
 		#add title for thermal camera and display output
-		self.therm_title = tk.Label(self, text='Thermal Camera', font=('calibri', 12),
+		self.therm_title = tk.Label(self, text='Thermal Camera', font=('calibri', 14),
 								    bg='#525252', fg='white')
-		self.therm_title.grid(row=1, column=0, sticky='w', padx=(5, 0))
+		self.therm_title.grid(row=1, column=0, sticky='w', padx=(10, 0))
 
 		self.therm_img = tk.Label(self)
 		try:
@@ -51,7 +51,7 @@ class SettingsCameras(tk.Frame):
 		except:
 			print('Error fetching thermal camera output')
 
-		self.therm_img.grid(row=1, column=1, padx=(0, 5))
+		self.therm_img.grid(row=1, column=1, pady=10)
 		
 		#variable used to stop camera outputs from updating
 		self.stopper_img = None

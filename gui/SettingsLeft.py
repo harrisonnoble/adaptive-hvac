@@ -24,16 +24,16 @@ class SettingsLeft(tk.Frame):
 		self._therm = thermostat
 
 		#create toggle buttons between sensors and camera
-		self.sensor_btn = tk.Label(self, text='Sensors', font=('calibri', 12),
+		self.sensor_btn = tk.Label(self, text='Sensors', font=('calibri', 14),
 								   bg='#cdcdcd', fg='#353535')
 		self.sensor_btn.bind('<Button-1>', lambda e: self._show_sensors())
-		self.camera_btn = tk.Label(self, text='Cameras', font=('calibri', 12),
+		self.camera_btn = tk.Label(self, text='Cameras', font=('calibri', 14),
 								   bg='#353535', fg='#cdcdcd')
 		self.camera_btn.bind('<Button-1>', lambda e: self._show_cameras())
 
 		#display toggle buttons
-		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 0), padx=(0, 4), ipadx=4)
-		self.camera_btn.grid(row=0, column=1, sticky='nw', pady=(10, 0), padx=(4, 0), ipadx=4)
+		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 5), padx=(0, 4), ipadx=4)
+		self.camera_btn.grid(row=0, column=1, sticky='nw', pady=(10, 5), padx=(4, 0), ipadx=4)
 
 		#create sensors and cameras frames
 		self.sensors = SettingsSensors(self, thermostat)

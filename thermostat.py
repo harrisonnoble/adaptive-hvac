@@ -13,6 +13,7 @@ from sensors.ThermCamera import ThermalCamera
 from sensors.DistanceSensor import DistanceSensor
 from sensors.LEDs import LEDs
 import configparser
+import os
 
 class Thermostat:
     '''Thermostat class creates UI and all sensors. This is the main
@@ -82,9 +83,10 @@ class Thermostat:
 
     def _read_config(self):
         '''Function to get configurable variables from config.ini file'''
+        curr_path = os.path.dirname(os.path.realpath(__file__))
         cfg = configparser.ConfigParser(allow_no_value=True)
         try:
-            cfg.read('config.cfg')
+            cfg.read(curr_path + '/config.cfg')
         except:
             #error handling
             cfg.add_section('thermostat')
