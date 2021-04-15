@@ -3,8 +3,6 @@
 
 import tkinter as tk
 from PIL import Image, ImageTk
-import numpy as np
-import os
 
 class SettingsCameras(tk.Frame):
 	'''SettingsCameras handles displaying the camera outputs in the left side of the settings
