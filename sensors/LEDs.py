@@ -9,9 +9,13 @@ class LEDs:
 # --------------------- Init Function  ---------------------
 
     def __init__(self):
-        self._fan_led = None #LED(5)
-        self._ac_led = None #LED(6)
-        self._heat_led = None #LED(13)
+        self._fan_led = LED(20)
+        self._ac_led = LED(21)
+        self._heat_led = LED(16)
+
+        self._fan_led.off()
+        self._ac_led.off()
+        self._heat_led.off()
 
 # --------------------- End Init Function  ---------------------  
 

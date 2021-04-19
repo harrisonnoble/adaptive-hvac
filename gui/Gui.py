@@ -45,7 +45,7 @@ class Gui(tk.Tk):
 
 		#call the thermostat algorithm function every second
 		self._therm = thermostat
-		self.algo_stopper = self.after(1000, self._run_algorithm)
+		self.algo_stopper = self.after(750, self._run_algorithm)
 
 # --------------------- End Init Function  ---------------------  
 
@@ -59,7 +59,7 @@ class Gui(tk.Tk):
 	def _run_algorithm(self):
 		'''Function that calls the thermostat algorithm'''
 		self._therm.algorithm()
-		self.algo_stopper = self.after(1000, self._run_algorithm)
+		self.algo_stopper = self.after(750, self._run_algorithm)
 
 	def show_dashboard(self):
 		'''Toggle to the main dashboard'''

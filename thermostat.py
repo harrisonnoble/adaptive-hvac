@@ -273,6 +273,18 @@ class Thermostat:
         if not self.is_on:
             return
 
+        if self._is_heating and not self.leds.heat_status:
+            self.leds.heat_on()
+            self.leds.ac_off()
+        elif not self._is_heating:
+            self.leds.heat_off()
+            self.leds.ac_on()
+
+        if self._fan and not self.leds.fan_status:
+            self.leds.fan_on()
+        elif not self._fan:
+            self.leds.fan_off()
+
         if self._system == 'Adaptive':
             #TODO: Adaptive functionality
             return

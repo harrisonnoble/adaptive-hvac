@@ -12,7 +12,7 @@ class MotionSensor:
 	def __init__(self):
 		self._motion = False
 
-		self._sensor = MotionSense('BOARD7')
+		self._sensor = MotionSense(4)
 		self._sensor.when_motion = self._on_motion
 		self._sensor.when_no_motion = self._no_motion
 

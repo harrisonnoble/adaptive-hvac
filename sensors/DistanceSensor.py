@@ -10,7 +10,7 @@ class DistanceSensor:
 # --------------------- Init Function  ---------------------  
 
 	def __init__(self):
-		self._pin_trigger = 4
+		self._pin_trigger = 5
 		self._pin_echo = 17
 
 		GPIO.setup(self._pin_trigger, GPIO.OUT)

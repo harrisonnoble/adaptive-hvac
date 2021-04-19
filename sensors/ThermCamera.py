@@ -55,7 +55,3 @@ class ThermalCamera:
 		return self._process_img()
 
 # --------------------- End Helper Functions  ---------------------  
-
-if __name__ == '__main__':
-	cam = ThermalCamera()
-	cam._process_img()
