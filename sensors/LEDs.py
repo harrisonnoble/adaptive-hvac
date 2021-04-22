@@ -45,6 +45,12 @@ class LEDs:
         '''Function to turn heat LED on'''
         self._heat_led.off()
 
+    def all_off(self):
+        '''Function to turn all LEDs off'''
+        self.fan_off()
+        self.ac_off()
+        self.heat_off()
+
     @property
     def fan_status(self):
         '''Function to check if fan LED is on (True) or off (False)'''

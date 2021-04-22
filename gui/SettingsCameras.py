@@ -5,9 +5,8 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 class SettingsCameras(tk.Frame):
-	'''SettingsCameras handles displaying the camera outputs in the left side of the settings
-	tab. Arguements are: 'parent' which is the frame object that creates this class, and 'thermostat' 
-	which is the thermostat object created at the beginning of execution.'''
+	'''SettingsCameras handles displaying the camera outputs in the left side of the settings tab. Arguements are: 'parent' which 
+	is the frame object that creates this class, and 'thermostat' which is the thermostat object created at the beginning of execution.'''
 	
 # --------------------- Init Function  ---------------------
 
@@ -24,8 +23,7 @@ class SettingsCameras(tk.Frame):
 		self._therm = thermostat
 
 		#add title for camera and display camera output
-		self.cam_title = tk.Label(self, text='Camera', font=('calibri', 14),
-								  bg='#525252', fg='white')
+		self.cam_title = tk.Label(self, text='Camera', font=('calibri', 14), bg='#525252', fg='white')
 		self.cam_title.grid(row=0, column=0, sticky='w', padx=(10, 0))
 
 		self.cam_img = tk.Label(self)
@@ -34,12 +32,10 @@ class SettingsCameras(tk.Frame):
 			self.cam_img.config(image=self.picture)
 		except:
 			print('Error fetching camera output')
-
 		self.cam_img.grid(row=0, column=1, padx=(0, 10), pady=10)
 
 		#add title for thermal camera and display output
-		self.therm_title = tk.Label(self, text='Thermal Camera', font=('calibri', 14),
-								    bg='#525252', fg='white')
+		self.therm_title = tk.Label(self, text='Thermal Camera', font=('calibri', 14), bg='#525252', fg='white')
 		self.therm_title.grid(row=1, column=0, sticky='w', padx=(10, 0))
 
 		self.therm_img = tk.Label(self)
@@ -48,11 +44,10 @@ class SettingsCameras(tk.Frame):
 			self.therm_img.config(image=self.therm_picture)
 		except:
 			print('Error fetching thermal camera output')
-
 		self.therm_img.grid(row=1, column=1, pady=10)
 		
 		#variable used to stop camera outputs from updating
-		self.stopper_img = None
+		self._stopper_img = None
 
 # --------------------- End Init Function  ---------------------
 
@@ -72,13 +67,13 @@ class SettingsCameras(tk.Frame):
 		except:
 			print('Error displaying thermal camera output')
 
-		self.stopper_img = self.after(500, self._update_imgs)
+		self._stopper_img = self.after(500, self._update_imgs)
 
 	def stopper(self):
 		'''function to stop updating camera outputs'''
-		if self.stopper_img:
-			self.after_cancel(self.stopper_img)
-			self.stopper_img = None
+		if self._stopper_img:
+			self.after_cancel(self._stopper_img)
+			self._stopper_img = None
 
 	def starter(self):
 		'''function to start camera update function'''

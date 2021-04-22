@@ -52,8 +52,8 @@ class Settings(tk.Frame):
 		self.right = SettingsRight(self, thermostat)
 
 		#variables to stop updates when not on page
-		self.time_stopper = None
-		self.temp_stopper = None
+		self._time_stopper = None
+		self._temp_stopper = None
 
 # --------------------- End Init Function  ---------------------
 
@@ -62,28 +62,27 @@ class Settings(tk.Frame):
 	def _update_time(self):
 		'''Function to update the displayed time every 10 seconds'''
 		self.time_label.config(text=strftime('%-I:%M %p'))
-		self.time_stopper = self.time_label.after(10000, self._update_time)
+		self._time_stopper = self.time_label.after(10000, self._update_time)
 
 	def _update_curr_temp(self):
 		'''Function to update current temperature label'''
-		self._therm.update_curr_temp()
 		self.curr_temp_lbl.config(text=str(self._therm.curr_temp) + '°')
 		self.left.update_temp_output()
-		self.temp_stopper = self.curr_temp_lbl.after(3000, self._update_curr_temp)
-
-	def update_curr_temp_degree(self):
-		'''Function to update current temperature degree (from SettingsRight)'''
-		self.curr_temp_lbl.config(text=str(self._therm.update_curr_temp()) + '°')
+		self._temp_stopper = self.curr_temp_lbl.after(3000, self._update_curr_temp)
+	
+	def update_curr_temp(self):
+		'''Function to update current temp, called by SettingsRight when temp mode changed'''
+		self.curr_temp_lbl.config(text=str(self._therm.curr_temp) + '°')
 		self.left.update_temp_output()
 
 	def stopper(self):
 		'''Stop all updates'''
-		if self.time_stopper:
-			self.time_label.after_cancel(self.time_stopper)
-			self.time_stopper = None
-		if self.temp_stopper:
-			self.curr_temp_lbl.after_cancel(self.temp_stopper)
-			self.temp_stopper = None
+		if self._time_stopper:
+			self.time_label.after_cancel(self._time_stopper)
+			self._time_stopper = None
+		if self._temp_stopper:
+			self.curr_temp_lbl.after_cancel(self._temp_stopper)
+			self._temp_stopper = None
 
 		self.left.stopper()
 

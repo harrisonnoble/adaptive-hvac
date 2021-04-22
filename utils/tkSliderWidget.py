@@ -6,10 +6,10 @@ from tkinter.ttk import *
 
 class Slider(Frame):
     LINE_COLOR = "#353535"
-    LINE_WIDTH = 3
+    LINE_WIDTH = 5
     BAR_COLOR_INNER = "white"
     BAR_COLOR_OUTTER = "white"
-    BAR_RADIUS = 8
+    BAR_RADIUS = 10
     BAR_RADIUS_INNER = BAR_RADIUS-5
     DIGIT_PRECISION = '.0f' # for showing in the canvas
     def __init__(self, master, width = 400, height = 80, min_val = 0, max_val = 1, init_lis = None, show_value = True):

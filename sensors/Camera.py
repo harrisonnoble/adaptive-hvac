@@ -87,8 +87,10 @@ class Camera:
 		self._stream.seek(0)
 		self._stream.truncate(0)
 
-	def get_img(self):
-		'''function that returns memory stream of the camera image'''
+	#getters
+	@property
+	def img(self):
+		'''property that returns memory stream of the camera image'''
 		#adjust camera settings and send the image to memory stream
 		try:
 			with PiCamera() as camera:
@@ -98,10 +100,9 @@ class Camera:
 			print('Camera error... skipping stream')
 			return
 
-		#convert image to numpy array and use that to create an OpenCV image
+		#convert image to numpy array and use that to create an RGB OpenCV image
 		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
 		image = cv2.imdecode(buffer, 1)
-		#convert to RGB
 		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 		self._stream.seek(0)
@@ -109,7 +110,6 @@ class Camera:
 
 		return image
 	
-	#getter
 	@property
 	def num_people(self):
 		'''property that runs the facial detection and returns number of people'''

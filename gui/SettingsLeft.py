@@ -6,9 +6,8 @@ from gui.SettingsSensors import SettingsSensors
 from gui.SettingsCameras import SettingsCameras
 
 class SettingsLeft(tk.Frame):
-	'''SettingsLeft handles displaying the left side of the settings page. Arguements 
-	are: 'parent' which is the frame object that creates this class, and 'thermostat' 
-	which is the thermostat object created at the beginning of execution.'''
+	'''SettingsLeft handles displaying the left side of the settings page. Arguements are: 'parent' which is the frame object 
+	that creates this class, and 'thermostat' which is the thermostat object created at the beginning of execution.'''
 	
 # --------------------- Init Function  ---------------------
 
@@ -27,12 +26,11 @@ class SettingsLeft(tk.Frame):
 		self.sensor_btn = tk.Label(self, text='Sensors', font=('calibri', 14),
 								   bg='#cdcdcd', fg='#353535')
 		self.sensor_btn.bind('<Button-1>', lambda e: self._show_sensors())
+		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 5), padx=(0, 4), ipadx=4)
+
 		self.camera_btn = tk.Label(self, text='Cameras', font=('calibri', 14),
 								   bg='#353535', fg='#cdcdcd')
 		self.camera_btn.bind('<Button-1>', lambda e: self._show_cameras())
-
-		#display toggle buttons
-		self.sensor_btn.grid(row=0, column=0, sticky='ne', pady=(10, 5), padx=(0, 4), ipadx=4)
 		self.camera_btn.grid(row=0, column=1, sticky='nw', pady=(10, 5), padx=(4, 0), ipadx=4)
 
 		#create sensors and cameras frames

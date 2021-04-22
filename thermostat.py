@@ -16,9 +16,8 @@ import configparser
 import os
 
 class Thermostat:
-    '''Thermostat class creates UI and all sensors. This is the main
-    entry point for program. To begin program please run 'python3 thermostat.py'.
-    After initializing all needed components, program will begin the execution
+    '''Thermostat class creates UI and all sensors. This is the main entry point for program. To begin program 
+    run 'python3 thermostat.py'. After initializing all needed components, program will begin the execution
     of the main loop which handles all UI and thermostat logic'''
 
 # --------------------- Init Function  ---------------------  
@@ -50,6 +49,7 @@ class Thermostat:
         self._is_heating = self._cfg.getboolean('thermostat', 'heat', fallback=str(True))
         self._fan = self._cfg.getboolean('thermostat', 'fan', fallback=str(False))
         self._system = self._cfg.get('thermostat', 'system')
+        self._reaching_temp = True
 
         #bind motion/no motion detection functions
         self.motion_sensor.set_motion_func(self._motion_func)
@@ -68,10 +68,9 @@ class Thermostat:
 # --------------------- Helper Functions  ---------------------  
 
     def _motion_func(self):
-        '''function that runs when motion is detected, updates number of people
-        and sets motion value to true'''
+        '''function that runs when motion is detected, updates number of people and sets motion value to true'''
         self._motion = self.motion_sensor.motion
-        self.update_num_people()
+        self._update_num_people()
 
     def _no_motion_func(self):
         '''function to run when motion is not detected, updates motion value to false'''
@@ -80,6 +79,29 @@ class Thermostat:
     def _sound_func(self):
         '''function to run when audio is detectued, updates sound variable'''
         self._sound = self.audio_sensor.sound
+    
+    def _update_num_people(self):
+        '''function to detect number of people and update value'''
+        self._num_people = self.camera.num_people
+
+    def _update_curr_temp(self):
+        '''Reads temperature sensor and updates curr_temp variable'''
+        self._curr_temp = self.temp_sensor.temp
+
+    def _update_room_size(self):
+        '''Reads distance sensor and updates room_size variable'''
+        self._room_size = self.distance_sensor.distance ** 2
+
+    def _toggle_temps(self):
+        '''function to update min temp, max temp, and desired temp based on degree'''
+        if self._degrees == 'C': #F to C
+            self._min_temp = round((self._min_temp - 32) * (5/9))
+            self._max_temp = round((self._max_temp - 32) * (5/9))
+            self._desired_temp = round((self._desired_temp - 32) * (5/9))
+        else: #C to F
+            self._min_temp = round((self._min_temp * 1.8) + 32)
+            self._max_temp = round((self._max_temp * 1.8) + 32)
+            self._desired_temp = round((self._desired_temp * 1.8) + 32)
 
     def _read_config(self):
         '''Function to get configurable variables from config.ini file'''
@@ -99,12 +121,10 @@ class Thermostat:
             self._cfg.set('thermostat', 'fan', str(False))
             self._cfg.set('thermostat', 'system', 'Adaptive')
         
-        #return config
         return cfg
 
     def write_config(self):
-        '''Function to write configurable variables to the config.ini file'''
-        #update config variables
+        '''Function to update and write configurable variables to the config.ini file'''
         self._cfg.set('thermostat', 'on', str(self._is_on))
         self._cfg.set('thermostat', 'degree', str(self._degrees))
         self._cfg.set('thermostat', 'min_temp', str(self._min_temp))
@@ -114,7 +134,6 @@ class Thermostat:
         self._cfg.set('thermostat', 'fan', str(self._fan))
         self._cfg.set('thermostat', 'system', str(self._system))
 
-        #write to config
         with open('config.cfg', 'w') as configfile:
             configfile.write('; DO NOT EDIT\n')
             self._cfg.write(configfile)
@@ -127,50 +146,24 @@ class Thermostat:
     def toggle_degree(self):
         '''function to toggle between C and F'''
         self._degrees = self.temp_sensor.toggle_mode()
-        self.update_curr_temp()
-        self.update_temps()
+        self._update_curr_temp()
+        self._toggle_temps()
         return self._degrees
 
-    def update_curr_temp(self):
-        '''function to update temperature value'''
-        self._curr_temp = self.temp_sensor.temp
-        return self._curr_temp
-
-    def update_num_people(self):
-        '''function to detect number of people and update value'''
-        self._num_people = self.camera.num_people
-        return self._num_people
+    def toggle_mode(self):
+        '''Toggles thermostat between 'Heat' and 'Cool' modes and returns value'''
+        self._is_heating = not self._is_heating
+        return self._is_heating
 
     def toggle_fan(self):
         '''function to toggle fan on and off, returns true if fan is on, false if fan is off'''
-        self._fan = False if self._fan else True
+        self._fan = not self._fan
         return self._fan
 
     def toggle_system(self):
         '''function to switch between adaptive and manual mode, returns the current mode after toggling'''
         self._system = 'Adaptive' if self._system == 'Manual' else 'Manual'
         return self._system
-
-    def update_temps(self):
-        '''function to update min temp, max temp, and desired temp based on degree'''
-        if self._degrees == 'C': #F to C
-            self._min_temp = round((self._min_temp - 32) * (5/9))
-            self._max_temp = round((self._max_temp - 32) * (5/9))
-            self._desired_temp = round((self._desired_temp - 32) * (5/9))
-        else: #C to F
-            self._min_temp = round((self._min_temp * 1.8) + 32)
-            self._max_temp = round((self._max_temp * 1.8) + 32)
-            self._desired_temp = round((self._desired_temp * 1.8) + 32)
-
-    def update_curr_temp(self):
-        '''Reads temperature sensor, updates curr_temp variable, and returns value'''
-        self._curr_temp = self.temp_sensor.temp
-        return self._curr_temp
-
-    def update_room_size(self):
-        '''Reads distance sensor and updates room_size variable'''
-        self._room_size = self.distance_sensor.distance ** 2
-        return self._room_size
 
     def inc_desired_temp(self):
         '''Increments desired temperature by 1 degree'''
@@ -184,18 +177,9 @@ class Thermostat:
             self._desired_temp -= 1
         return self._desired_temp
 
-    def switch_mode(self):
-        '''Toggles thermostat between 'Heat' and 'Cool' modes and returns value'''
-        self._is_heating = not self._is_heating
-        return self._is_heating
-
-    def switch_system(self):
-        '''Toggles system between 'Adaptive' and 'Manual' modes and returns value'''
-        self._system = 'Adaptive' if self._system == 'Manual' else 'Manual'
-
     def get_img(self):
         '''function to grab the image from the camera'''
-        return self.camera.get_img()
+        return self.camera.img
 
     def get_therm_img(self):
         '''function to grab thermal image from thermal camera'''
@@ -236,7 +220,7 @@ class Thermostat:
 
     @property
     def room_size(self):
-        return self.update_room_size()
+        return self._room_size
     
     @property
     def sound(self):
@@ -269,28 +253,79 @@ class Thermostat:
 
     def algorithm(self):
         '''main algorithm of the thermostat, handles all aspects of thermostat logic'''
+        #update sensors
+        self._update_room_size()
+        self._update_curr_temp()
+
         #make sure thermostat is on before running algorithm
         if not self.is_on:
+            self.leds.all_off()
             return
-
-        if self._is_heating and not self.leds.heat_status:
-            self.leds.heat_on()
-            self.leds.ac_off()
-        elif not self._is_heating:
-            self.leds.heat_off()
-            self.leds.ac_on()
-
-        if self._fan and not self.leds.fan_status:
-            self.leds.fan_on()
-        elif not self._fan:
-            self.leds.fan_off()
 
         if self._system == 'Adaptive':
-            #TODO: Adaptive functionality
-            return
+            alpha = 0
+            if self._num_people != 0:
+                alpha = float(self._room_size) / float(2.5 * self._num_people)
+
+            if self._reaching_temp and self._curr_temp >= self._desired_temp - 0.2 and self._curr_temp <= self._desired_temp + 0.2:
+                self._reaching_temp = False
+                self.leds.all_off()
+                return
+
+            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 1 and self._curr_temp <= self._desired_temp + 1:
+                self.leds.all_off()
+                return
+
+            if self._is_heating:
+                self.leds.ac_off()
+            else:
+                self.leds.heat_off()
+
         elif self._system == 'Manual':
-            #TODO: Manual functionality
-            return
+            #if thermostat reached the desired temp (+/- small error) turn off HVAC
+            if self._reaching_temp and self._curr_temp >= self._desired_temp - 0.2 and self._curr_temp <= self._desired_temp + 0.2:
+                self._reaching_temp = False
+                self.leds.all_off()
+                return
+
+            #if the current temp is still in temperature buffer zone after reaching desired temp, keep HVAC off
+            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 1 and self._curr_temp <= self._desired_temp + 1:
+                self.leds.all_off()
+                return
+
+            #the below logic runs if outside temp buffer 
+            if self._is_heating:
+                self.leds.ac_off()
+            else:
+                self.leds.heat_off()
+
+            if not self._fan:
+                self.leds.fan_off()
+
+            #current temp is greater than the desired temp and therm is in cooling mode
+            if self._curr_temp > self._desired_temp and not self._is_heating:
+                self._reaching_temp = True
+                self.leds.heat_off()
+                self.leds.ac_on()
+                if self._fan:
+                    self.leds.fan_on()
+
+            #current temp is greater than the desired temp and therm is in heating mode
+            if self._curr_temp > self._desired_temp and self._is_heating:
+                self.leds.heat_off()
+                self.leds.fan_off()
+                
+            #current temp is less than the desired temp and therm is in heating mode
+            if self._curr_temp < self._desired_temp and self._is_heating:
+                self._reaching_temp = True
+                self.leds.ac_off()
+                self.leds.heat_on()
+                
+            #current temp is less than the desired temp and therm is in cooling mode
+            if self._curr_temp < self._desired_temp and not self._is_heating:
+                self.leds.ac_off()
+                if self._fan:
+                    self.leds.fan_off()
     
 # --------------------- End Helper Functions  ---------------------  
 

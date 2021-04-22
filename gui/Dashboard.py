@@ -6,12 +6,10 @@ from time import strftime
 import os
 
 class Dashboard(tk.Frame): 
-	'''Dashboard class that manages displaying current temperature, desired
-	temperature, fan control, and heat/cool control. Functionality to update
-	desired temperature, heat/cool mode and fan control handled in this class. 
-	Arguements are: 'parent' which is the frame object that creates this class, 
-	'controller' which handles the swapping between the settings page and dashboard, 
-	and 'thermostat' which is the thermostat object created at the beginning of execution.'''
+	'''Dashboard class that manages displaying current temperature, desired temperature, fan control, and heat/cool control.
+	Functionality to update desired temperature, heat/cool mode and fan control handled in this class. Arguements are: 'parent' 
+	which is the frame object that creates this class, 'controller' which handles the swapping between the settings page and 
+	dashboard, and 'thermostat' which is the thermostat object created at the beginning of execution.'''
 
 # --------------------- Init Function ---------------------   
 
@@ -50,7 +48,7 @@ class Dashboard(tk.Frame):
 
 		#create labels for variables, variable descriptions, and backgrounds
 		self.mode_bg = tk.Label(self.left, bg='#525252', width=12)
-		self.mode_bg.bind('<Button-1>', lambda e: self._change_mode())
+		self.mode_bg.bind('<Button-1>', lambda e: self._toggle_mode())
 		self.mode_bg.grid(row=0, column=0, sticky='ns', pady=(0, 15))
 
 		self.mode_lbl = tk.Label(self.left, text='Mode', font=('calibri', 12), bg='#525252', fg='white')
@@ -59,7 +57,7 @@ class Dashboard(tk.Frame):
 		self.mode_stng = tk.Label(self.left, font=('calibri', 14), bg='#525252', 
 								  text='Heat' if self._therm.mode else 'Cool',
 								  fg='#ff1212' if self._therm.mode else '#0062ff')
-		self.mode_stng.bind('<Button-1>', lambda e: self._change_mode())
+		self.mode_stng.bind('<Button-1>', lambda e: self._toggle_mode())
 		self.mode_stng.grid(row=0, column=0)
 
 		self.fan_bg = tk.Label(self.left, bg='#525252', width=12)
@@ -69,8 +67,7 @@ class Dashboard(tk.Frame):
 		self.fan_lbl = tk.Label(self.left, text='Fan', font=('calibri', 12), bg='#525252', fg='white')
 		self.fan_lbl.grid(row=1, column=0, sticky='n')
 
-		self.fan_stng = tk.Label(self.left, font=('calibri', 14), bg='#525252', fg='white',
-								 text='On' if self._therm.fan else 'Off')
+		self.fan_stng = tk.Label(self.left, font=('calibri', 14), bg='#525252', fg='white', text='On' if self._therm.fan else 'Off')
 		self.fan_stng.bind('<Button-1>', lambda e: self._toggle_fan())
 		self.fan_stng.grid(row=1, column=0)
 
@@ -99,16 +96,14 @@ class Dashboard(tk.Frame):
 		self.bg_img = tk.Label(self.middle, image=self.bg, borderwidth=0)
 		self.bg_img.grid(row=0, rowspan=3, column=0, columnspan=3)
 
-		self.curr_temp = tk.Label(self.middle, font=('calibri', 38), bg='#525252', 
-								  fg='white', text=str(self._therm.curr_temp) + '°')
+		self.curr_temp = tk.Label(self.middle, font=('calibri', 38), bg='#525252', fg='white', text=str(self._therm.curr_temp) + '°')
 		self.curr_temp.grid(row=1, column=0, columnspan=3)
 
-		self.curr_temp_lbl = tk.Label(self.middle, font=('calibri', 14), bg='#525252', 
-									  fg='white', text='Current Temp')
+		self.curr_temp_lbl = tk.Label(self.middle, font=('calibri', 14), bg='#525252', fg='white', text='Current Temp')
 		self.curr_temp_lbl.grid(row=2, column=0, columnspan=3, sticky='n')
 		
-		self.desired_temp = tk.Label(self.middle, font=('calibri', 30), bg='#121212', 
-									 fg='white', text=str(self._therm.desired_temp) + '°')
+		self.desired_temp = tk.Label(self.middle, font=('calibri', 30), bg='#121212', fg='white', 
+									 text=str(self._therm.desired_temp) + '°')
 		self.desired_temp.grid(row=3, column=1, sticky='s')
 		
 		self.temp_down = tk.Label(self.middle, font=('calibri', 34), bg='#121212', fg='white', text='-')
@@ -119,97 +114,94 @@ class Dashboard(tk.Frame):
 		self.temp_up.bind('<Button-1>', lambda e: self._inc_temp())								
 		self.temp_up.grid(row=3, column=2, sticky='sw')
 
-		self.desired_temp_lbl = tk.Label(self.middle, font=('calibri', 14), bg='#121212', 
-										 fg='white', text='Desired Temp')
+		self.desired_temp_lbl = tk.Label(self.middle, font=('calibri', 14), bg='#121212', fg='white', text='Desired Temp')
 		self.desired_temp_lbl.grid(row=4, column=1, sticky='n')
 		#--------------------------------------------
 
-		self.time_stopper = None
-		self.curr_temp_stopper = None
-		self.fan_stopper = None
+		self._time_stopper = None
+		self._curr_temp_stopper = None
+		self._fan_stopper = None
+		self._mode_stopper = None
 
 # --------------------- End Init Function ---------------------
 
 # --------------------- Helper Functions  ---------------------
 
 	def _update_time(self):
-		'''Function to update the displayed time every 30 seconds'''
+		'''Function to update the displayed time every 10 seconds'''
 		self.time_lbl.config(text=strftime('%-I:%M %p'))
-		self.time_stopper = self.time_lbl.after(30000, self._update_time)
+		self._time_stopper = self.time_lbl.after(10000, self._update_time)
 
 	def _update_curr_temp(self):
 		'''Function to update current temperature label'''
-		self.curr_temp.config(text=str(self._therm.update_curr_temp()) + '°')
-		self.curr_temp_stopper = self.curr_temp.after(10000, self._update_curr_temp)
+		self.curr_temp.config(text=str(self._therm.curr_temp) + '°')
+		self._curr_temp_stopper = self.curr_temp.after(5000, self._update_curr_temp)
+
+	def _update_fan(self):
+		'''Check if fan setting has changed after time period and update if so'''
+		if self._therm.is_on:
+			self.fan_stng.config(text='On' if self._therm.fan else 'Off')
+		else:
+			self.fan_stng.config(text='Off', fg='white')
+		self._fan_stopper = self.fan_stng.after(500, self._update_fan)
+
+	def _update_mode(self):
+		'''Check if mode has changed after time period and update if so '''
+		if self._therm.is_on:
+			self.mode_stng.config(text='Heat' if self._therm.mode else 'Cool', 
+							  	  fg='#ff1212' if self._therm.mode else '#0062ff')
+		else:
+			self.mode_stng.config(text='Off', fg='white')
+		self._mode_stopper = self.mode_stng.after(500, self._update_mode)
 
 	def _inc_temp(self):
 		'''Function to increment desired temperature label'''
 		if self._therm.is_on:
-			self._therm.inc_desired_temp()
-			self.desired_temp.config(text=str(self._therm.desired_temp) + '°')
+			self.desired_temp.config(text=str(self._therm.inc_desired_temp()) + '°')
 	
 	def _dec_temp(self):
 		'''Function to decrement desired temperature label'''
 		if self._therm.is_on:
-			self._therm.dec_desired_temp()
-			self.desired_temp.config(text=str(self._therm.desired_temp) + '°')
+			self.desired_temp.config(text=str(self._therm.dec_desired_temp()) + '°')
 
-	def _change_mode(self):
+	def _toggle_mode(self):
 		'''Function to change the mode (heat/cool) of the thermostat'''
 		if self._therm.is_on:
-			self._therm.switch_mode()
+			self._therm.toggle_mode()
 			self.mode_stng.config(text='Heat' if self._therm.mode else 'Cool', 
 								  fg='#ff1212' if self._therm.mode else '#0062ff')
-		else:
-			self.mode_stng.config(text='Off', fg='white')
 
 	def _toggle_fan(self):
 		'''Toggles the fan on and off if thermostat is in manual setting'''
-		if self._therm.system == 'Manual':
-			self._therm.toggle_fan()
-			self.fan_stng.config(text='On' if self._therm.fan else 'Off')
-
-	def _update_fan(self):
-		'''Check if fan setting has changed after time period and update if so'''
-		self.fan_stng.config(text='On' if self._therm.fan else 'Off')
-		self.fan_stopper = self.fan_stng.after(500, self._update_fan)
+		if self._therm.system == 'Manual' and self._therm.is_on:
+			self.fan_stng.config(text='On' if self._therm.toggle_fan() else 'Off')
 
 	def _check_labels(self):
-		'''Checks the label values of data that could have been changed in settings
-		and update accordingly'''
-		if self._therm.is_on:
-			#update left side labels
-			self.mode_stng.config(text='Heat' if self._therm.mode else 'Cool', 
-								  fg='#ff1212' if self._therm.mode else '#0062ff')
-			self.fan_stng.config(text='On' if self._therm.fan else 'Off')
-			self.system_stng.config(text=self._therm.system)
-			#update desired temp (between C or F if changed)
-			self.desired_temp.config(text=str(self._therm.desired_temp) + '°')
-		else:
-			#update left side labels
-			self.mode_stng.config(text='Off', fg='white')
-			self.fan_stng.config(text='Off')
-			self.system_stng.config(text='Off')
-			#update desired temperature 
-			self.desired_temp.config(text='Off')
+		'''Checks the label values of data that could have been changed in settings and update accordingly'''
+		self.system_stng.config(text=self._therm.system if self._therm.is_on else 'Off')
+		self.desired_temp.config(text=str(self._therm.desired_temp) + '°' if self._therm.is_on else 'Off')
 
 	def stopper(self):
 		'''function that stops all update functions'''
-		if self.time_stopper:
-			self.time_lbl.after_cancel(self.time_stopper)
-			self.time_stopper = None
-		if self.curr_temp_stopper:
-			self.curr_temp.after_cancel(self.curr_temp_stopper)
-			self.curr_temp_stopper = None
-		if self.fan_stopper:
-			self.fan_stng.after_cancel(self.fan_stopper)
-			self.fan_stopper = None
+		if self._time_stopper:
+			self.time_lbl.after_cancel(self._time_stopper)
+			self._time_stopper = None
+		if self._curr_temp_stopper:
+			self.curr_temp.after_cancel(self._curr_temp_stopper)
+			self._curr_temp_stopper = None
+		if self._fan_stopper:
+			self.fan_stng.after_cancel(self._fan_stopper)
+			self._fan_stopper = None
+		if self._mode_stopper:
+			self.mode_stng.after_cancel(self._mode_stopper)
+			self._mode_stopper = None
 
 	def starter(self):
 		'''function that starts all update functions'''
 		self._update_time()
 		self._update_curr_temp()
 		self._update_fan()
+		self._update_mode()
 		self._check_labels()
 
 # --------------------- End Helper Functions  ---------------------
