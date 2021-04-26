@@ -7,6 +7,7 @@ from colour import Color
 import numpy as np
 import cv2
 import board
+import imutils
 
 class ThermalCamera:
 	'''ThermalCamera class to handle the interfacing to the AMG8833 IR thermal camera'''
@@ -45,6 +46,7 @@ class ThermalCamera:
 		
 		pixels = np.asarray(pixels, dtype='uint8')
 		pixels = cv2.resize(pixels, None, fx=17, fy=17, interpolation=cv2.INTER_CUBIC)
+		pixels = imutils.rotate(pixels, 90)
 
 		return pixels
 
@@ -52,6 +54,10 @@ class ThermalCamera:
 	@property
 	def therm_img(self):
 		'''Property to get the thermal image from camera'''
-		return self._process_img()
+		try:
+			return self._process_img()
+		except:
+			print('Error getting thermal image')
+			return
 
 # --------------------- End Helper Functions  ---------------------  

@@ -1,7 +1,7 @@
 # TempSensor.py
 # written by Harrison Noble
 
-from utils import bme280 as bme
+from utils import bme280
 
 class TempSensor:
 	'''Temerature sensor class to interface with BME 280 temperature sensor'''
@@ -24,7 +24,7 @@ class TempSensor:
 
 	def _update_temp(self):
 		'''Function to update the temperature variable. Uses bme280.py, a script made for the temperature sensor'''
-		temp, _, _ = bme.readBME280All()
+		temp, _, _ = bme280.readBME280All()
 		self._temperature = temp
 
 	def _convert_to_f(self):

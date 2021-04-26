@@ -1,8 +1,7 @@
 # Gui.py
 # written by Harrison Noble
 
-from gui.Dashboard import Dashboard
-from gui.Settings import Settings
+from gui import Dashboard, Settings
 import tkinter as tk
 import sys
 
@@ -53,8 +52,10 @@ class Gui(tk.Tk):
 
 	def _on_close(self):
 		'''Function to run when program is closed'''
-		self._therm.write_config()
-		self.destroy()
+		if self._algo_stopper:
+			self.after_cancel(self._algo_stopper)
+			self._algo_stopper = None
+		self._therm.save()
 
 	def _run_algorithm(self):
 		'''Function that calls the thermostat algorithm'''

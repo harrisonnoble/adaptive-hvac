@@ -31,7 +31,7 @@ class SettingsCameras(tk.Frame):
 			self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
 			self.cam_img.config(image=self.picture)
 		except:
-			print('Error fetching camera output')
+			pass
 		self.cam_img.grid(row=0, column=1, padx=(0, 10), pady=10)
 
 		#add title for thermal camera and display output
@@ -43,7 +43,7 @@ class SettingsCameras(tk.Frame):
 			self.therm_picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_therm_img()))
 			self.therm_img.config(image=self.therm_picture)
 		except:
-			print('Error fetching thermal camera output')
+			pass
 		self.therm_img.grid(row=1, column=1, pady=10)
 		
 		#variable used to stop camera outputs from updating
@@ -59,13 +59,13 @@ class SettingsCameras(tk.Frame):
 			self.picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_img()))
 			self.cam_img.config(image=self.picture)
 		except:
-			print('Error displaying camera output')
+			pass
 
 		try:
 			self.therm_picture = ImageTk.PhotoImage(image=Image.fromarray(self._therm.get_therm_img()))
 			self.therm_img.config(image=self.therm_picture)
 		except:
-			print('Error displaying thermal camera output')
+			pass
 
 		self._stopper_img = self.after(500, self._update_imgs)
 

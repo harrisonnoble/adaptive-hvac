@@ -2,10 +2,7 @@
 # written by Harrison Noble
 
 import tkinter as tk
-import sys
-import os
-import time
-from utils.tkSliderWidget import Slider
+from utils import Slider
 
 class SettingsRight(tk.Frame):
 	'''SettingsRight handles displaying the right side of the settings page. Arguements are: 'parent' which is the frame 
@@ -122,11 +119,8 @@ class SettingsRight(tk.Frame):
 
 	def _reboot(self):
 		'''function to stop thermostat and run it again'''
-		print('Rebooting...')
 		self._parent.stopper()
-		self._therm.write_config()
-		time.sleep(2)
-		os.execv(sys.executable, ['python3'] + sys.argv)
+		self._therm.reboot()
 
 	def _get_temp_vals(self):
 		'''function to update max and min temperature values'''

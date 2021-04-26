@@ -22,7 +22,8 @@ class Camera:
 		#create memory stream so photos dont have to be saved as files
 		self._stream = io.BytesIO()
 
-		self.streaming_img = False
+		self._streaming_img = False
+		self._detecting_faces = False
 
 # --------------------- End Init Function  ---------------------  
 
@@ -30,27 +31,33 @@ class Camera:
 
 	def _detect_people(self, write_img=False):
 		'''Function to detect number of people in the room'''
-		#adjust camera settings and send the image to memory stream
-		if not self.streaming_img:
-			try:
-				with PiCamera() as camera:
-					camera.resolution = (640, 360)
-					camera.capture(self._stream, format='jpeg')
-			except:
-				print('Camera error... skipping detection')
-				return
-		else:
+		#dont detect faces if camera is streaming
+		if self._streaming_img:
 			print('Camera busy... skipping detection')
 			return
 
+		#adjust camera settings and send the image to memory stream
+		self._detecting_faces = True
+		try:
+			with PiCamera() as camera:
+				camera.rotation = 90
+				camera.resolution = (224, 144)
+				camera.capture(self._stream, format='jpeg')
+		except:
+			print('Camera error... skipping detection')
+			return
+
 		#convert image to numpy array and use that to create an OpenCV image
-		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
-		image = cv2.imdecode(buffer, 1)
+		image = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
+		self._stream.seek(0)
+		self._stream.truncate(0)
+		self._detecting_faces = False
+		image = cv2.imdecode(image, 1)
 
 		#convert to grayscale and look for faces in image using the cascade classifier
-		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-		faces = self._face_cascade.detectMultiScale(gray, 1.1, 5)
-		profiles = self._profile_cascade.detectMultiScale(gray, 1.1, 5)
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+		faces = self._face_cascade.detectMultiScale(image, 1.1, 5)
+		profiles = self._profile_cascade.detectMultiScale(image, 1.1, 5)
 
 		#loop through all faces and profiles of faces detected
 		profiles_not_faces = []
@@ -81,19 +88,22 @@ class Camera:
 				cv2.rectangle(image, (x, y), (x+w, y+h), (255, 255, 0), 2)
 			for (x, y, w, h) in profiles:
 				cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
-
 			cv2.imwrite('result.jpg', image)
-
-		self._stream.seek(0)
-		self._stream.truncate(0)
 
 	#getters
 	@property
 	def img(self):
 		'''property that returns memory stream of the camera image'''
+		#dont stream if camera is detecting faces
+		if self._detecting_faces:
+			print('Camera detecting faces... skipping stream')
+			return
+
 		#adjust camera settings and send the image to memory stream
+		self._streaming_img = True
 		try:
 			with PiCamera() as camera:
+				camera.rotation = 90
 				camera.resolution = (224, 144)
 				camera.capture(self._stream, format='jpeg')
 		except:
@@ -101,12 +111,12 @@ class Camera:
 			return
 
 		#convert image to numpy array and use that to create an RGB OpenCV image
-		buffer = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
-		image = cv2.imdecode(buffer, 1)
-		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
+		image = np.frombuffer(self._stream.getvalue(), dtype=np.uint8)
 		self._stream.seek(0)
 		self._stream.truncate(0)
+		self._streaming_img = False
+		image = cv2.imdecode(image, 1)
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 		return image
 	

@@ -16,24 +16,21 @@ class AudioSensor:
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self._pin, GPIO.IN)
-        GPIO.add_event_detect(self._pin, GPIO.BOTH, callback=self._audio_callback, bouncetime=1000)
-        #GPIO.add_event_callback(self._pin, self.audio_callback, bouncetime=1000)
+        GPIO.add_event_detect(self._pin, GPIO.BOTH, callback=self._sound_callback, bouncetime=1000)
 
 # --------------------- End Init Function  ---------------------  
 
 # --------------------- Helper Functions  --------------------- 
 
-    def _audio_callback(self, pin):
+    def _sound_callback(self, pin):
         '''function to run when audio sensor detects or stops detecting sound'''
         if GPIO.input(pin):
             self._sound = True
-            #print('sound')
             if self._sound_func:
                 self._sound_func()
             time.sleep(1)
         else:
             self._sound = False
-            #print('no sound')
             if self._sound_func:
                 self._sound_func()
 

@@ -2,9 +2,7 @@
 # written by Harrison Noble
 
 import tkinter as tk
-from tkinter.constants import S
-from gui.SettingsLeft import SettingsLeft
-from gui.SettingsRight import SettingsRight
+from gui import SettingsLeft, SettingsRight
 from time import strftime
 import os
 
