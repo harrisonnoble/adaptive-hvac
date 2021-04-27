@@ -160,7 +160,7 @@ class Thermostat:
         '''Function to reboot the thermostat'''
         print('Saving & Rebooting...')
         self.save()
-        time.sleep(2)
+        time.sleep(1.5)
         os.execv(sys.executable, ['python3'] + sys.argv)
 
     def toggle_on(self):
@@ -289,31 +289,61 @@ class Thermostat:
 
         if self._system == 'Adaptive':
             #calculate alpha value
-            alpha = 0
+            alpha = None
             if self._num_people != 0:
                 alpha = float(self._room_size) / float(2.5 * self._num_people)
 
             #run logic based on alpha value
-            if alpha == 0:
+            if alpha == None:
                 pass
             elif alpha < 1:
                 pass
             elif alpha >= 1:
                 pass
 
+            #if thermostat reached the desired temp (+/- small error) turn off HVAC
             if self._reaching_temp and self._curr_temp >= self._desired_temp - 0.2 and self._curr_temp <= self._desired_temp + 0.2:
                 self._reaching_temp = False
                 self._leds.all_off()
                 return
 
-            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 1 and self._curr_temp <= self._desired_temp + 1:
+            #if the current temp is still in temperature buffer zone after reaching desired temp, keep HVAC off
+            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 0.5 and self._curr_temp <= self._desired_temp + 0.5:
                 self._leds.all_off()
                 return
 
+            #if curr temp is less than buffer zone and therm is not reaching desired temp
+            if not self._reaching_temp and self._curr_temp < self._desired_temp - 0.5:
+                self._is_heating = True
+                self._fan = False
+                self._reaching_temp = True
+            #if curr temp is greater than buffer zone and therm is not reaching desired temp
+            elif not self._reaching_temp and self._curr_temp > self._desired_temp + 0.5:
+                self._is_heating = False
+                self._fan = True
+                self._reaching_temp = True
+            
+            #switch to cooling mode if temp is too high
+            if self._reaching_temp and self._curr_temp > self._desired_temp + 0.5 and self._is_heating:
+                self._is_heating = False
+                self._fan = True
+            #switch to heating mode if temp is too low
+            if self._reaching_temp and self._curr_temp < self._desired_temp - 0.5 and not self._is_heating:
+                self._is_heating = True
+                self._fan = False
+
+            #toggle LEDs based on above logic
             if self._is_heating:
                 self._leds.ac_off()
+                self._leds.heat_on()
             else:
                 self._leds.heat_off()
+                self._leds.ac_on()
+            
+            if self._fan:
+                self._leds.fan_on()
+            else:
+                self._leds.fan_off()
 
         elif self._system == 'Manual':
             #if thermostat reached the desired temp (+/- small error) turn off HVAC
@@ -323,7 +353,7 @@ class Thermostat:
                 return
 
             #if the current temp is still in temperature buffer zone after reaching desired temp, keep HVAC off
-            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 1 and self._curr_temp <= self._desired_temp + 1:
+            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 0.5 and self._curr_temp <= self._desired_temp + 0.5:
                 self._leds.all_off()
                 return
 
