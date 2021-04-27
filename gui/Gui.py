@@ -42,9 +42,9 @@ class Gui(tk.Tk):
 		#initially display the main dashboard
 		self.show_dashboard()
 
-		#call the thermostat algorithm function every 0.75 seconds
+		#call the thermostat algorithm function every 0.5 seconds
 		self._therm = thermostat
-		self._algo_stopper = self.after(750, self._run_algorithm)
+		self._algo_stopper = self.after(500, self._run_algorithm)
 
 # --------------------- End Init Function  ---------------------  
 

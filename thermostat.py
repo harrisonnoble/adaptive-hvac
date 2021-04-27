@@ -293,44 +293,48 @@ class Thermostat:
             if self._num_people != 0:
                 alpha = float(self._room_size) / float(2.5 * self._num_people)
 
-            #run logic based on alpha value
-            if alpha == None:
-                pass
-            elif alpha < 1:
-                pass
-            elif alpha >= 1:
-                pass
+            if self._reaching_temp:
+                #if thermostat reached the desired temp (+/- small error) turn off HVAC
+                if self._curr_temp >= self._desired_temp - 0.2 and self._curr_temp <= self._desired_temp + 0.2:
+                    self._reaching_temp = False
+                    self._leds.all_off()
+                    return
 
-            #if thermostat reached the desired temp (+/- small error) turn off HVAC
-            if self._reaching_temp and self._curr_temp >= self._desired_temp - 0.2 and self._curr_temp <= self._desired_temp + 0.2:
-                self._reaching_temp = False
-                self._leds.all_off()
-                return
+                if self._is_heating:
+                    #switch to cooling mode if temp is too high
+                    if self._curr_temp > self._desired_temp:
+                        self._is_heating = False
+                        self._fan = True
+                    
+                    #if curr temp is less than desired temp, continue heating
+                    if self._curr_temp < self._desired_temp:
+                        self._is_heating = True
+                        self._fan = False
+                else:      
+                    #switch to heating mode if temp is too low
+                    if self._curr_temp < self._desired_temp:
+                        self._is_heating = True
+                        self._fan = False
 
-            #if the current temp is still in temperature buffer zone after reaching desired temp, keep HVAC off
-            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 0.5 and self._curr_temp <= self._desired_temp + 0.5:
-                self._leds.all_off()
-                return
-
-            #if curr temp is less than buffer zone and therm is not reaching desired temp
-            if not self._reaching_temp and self._curr_temp < self._desired_temp - 0.5:
-                self._is_heating = True
-                self._fan = False
-                self._reaching_temp = True
-            #if curr temp is greater than buffer zone and therm is not reaching desired temp
-            elif not self._reaching_temp and self._curr_temp > self._desired_temp + 0.5:
-                self._is_heating = False
-                self._fan = True
-                self._reaching_temp = True
-            
-            #switch to cooling mode if temp is too high
-            if self._reaching_temp and self._curr_temp > self._desired_temp + 0.5 and self._is_heating:
-                self._is_heating = False
-                self._fan = True
-            #switch to heating mode if temp is too low
-            if self._reaching_temp and self._curr_temp < self._desired_temp - 0.5 and not self._is_heating:
-                self._is_heating = True
-                self._fan = False
+                    #if curr temp is greater than desired temp, continue cooling
+                    if self._curr_temp > self._desired_temp:
+                        self._is_heating = False
+                        self._fan = True
+            else:
+                #if the current temp is still in temperature buffer zone after reaching desired temp, keep HVAC off
+                if self._curr_temp >= self._desired_temp - 0.5 and self._curr_temp <= self._desired_temp + 0.5:
+                    if alpha == None or alpha < 1:
+                        self._leds.all_off()
+                        return
+                    elif self._curr_temp < self._desired_temp - 0.2 or self._curr_temp > self._desired_temp + 0.2:
+                        self._reaching_temp = True
+                        return
+                    else:
+                        self._leds.all_off()
+                        return
+                else:
+                    self._reaching_temp = True
+                    return
 
             #toggle LEDs based on above logic
             if self._is_heating:
@@ -346,50 +350,49 @@ class Thermostat:
                 self._leds.fan_off()
 
         elif self._system == 'Manual':
-            #if thermostat reached the desired temp (+/- small error) turn off HVAC
-            if self._reaching_temp and self._curr_temp >= self._desired_temp - 0.2 and self._curr_temp <= self._desired_temp + 0.2:
-                self._reaching_temp = False
-                self._leds.all_off()
-                return
-
-            #if the current temp is still in temperature buffer zone after reaching desired temp, keep HVAC off
-            if not self._reaching_temp and self._curr_temp >= self._desired_temp - 0.5 and self._curr_temp <= self._desired_temp + 0.5:
-                self._leds.all_off()
-                return
+            if self._reaching_temp:
+                #if thermostat reached the desired temp (+/- small error) turn off HVAC
+                if self._curr_temp >= self._desired_temp - 0.2 and self._curr_temp <= self._desired_temp + 0.2:
+                    self._reaching_temp = False
+                    self._leds.all_off()
+                    return
+            else:
+                #if the current temp is still in temperature buffer zone after reaching desired temp, keep HVAC off
+                if self._curr_temp >= self._desired_temp - 0.5 and self._curr_temp <= self._desired_temp + 0.5:
+                    self._leds.all_off()
+                    return
 
             #the below logic runs if outside temp buffer 
-            if self._is_heating:
-                self._leds.ac_off()
-            else:
-                self._leds.heat_off()
-
             if not self._fan:
                 self._leds.fan_off()
 
-            #current temp is greater than the desired temp and therm is in cooling mode
-            if self._curr_temp > self._desired_temp and not self._is_heating:
-                self._reaching_temp = True
-                self._leds.heat_off()
-                self._leds.ac_on()
-                if self._fan:
-                    self._leds.fan_on()
-
-            #current temp is greater than the desired temp and therm is in heating mode
-            if self._curr_temp > self._desired_temp and self._is_heating:
-                self._leds.heat_off()
-                self._leds.fan_off()
-                
-            #current temp is less than the desired temp and therm is in heating mode
-            if self._curr_temp < self._desired_temp and self._is_heating:
-                self._reaching_temp = True
+            if self._is_heating:
                 self._leds.ac_off()
-                self._leds.heat_on()
-                
-            #current temp is less than the desired temp and therm is in cooling mode
-            if self._curr_temp < self._desired_temp and not self._is_heating:
-                self._leds.ac_off()
-                if self._fan:
+                #current temp is greater than the desired temp and therm is in heating mode
+                if self._curr_temp > self._desired_temp:
+                    self._leds.heat_off()
                     self._leds.fan_off()
+                    
+                #current temp is less than the desired temp and therm is in heating mode
+                if self._curr_temp < self._desired_temp:
+                    self._reaching_temp = True
+                    self._leds.ac_off()
+                    self._leds.heat_on()
+            else:
+                self._leds.heat_off()
+                #current temp is greater than the desired temp and therm is in cooling mode
+                if self._curr_temp > self._desired_temp:
+                    self._reaching_temp = True
+                    self._leds.heat_off()
+                    self._leds.ac_on()
+                    if self._fan:
+                        self._leds.fan_on()
+                    
+                #current temp is less than the desired temp and therm is in cooling mode
+                if self._curr_temp < self._desired_temp:
+                    self._leds.ac_off()
+                    if self._fan:
+                        self._leds.fan_off()
     
 # --------------------- End Helper Functions  ---------------------  
 
