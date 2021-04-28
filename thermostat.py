@@ -152,6 +152,8 @@ class Thermostat:
         #delete all sensor/camera/led objects
         self._audio_sensor.set_sound_func(None)
         del self._audio_sensor
+        self._motion_sensor.set_motion_func(None)
+        self._motion_sensor.set_no_motion_func(None)
         del self._motion_sensor
         del self._temp_sensor
         del self._therm_camera

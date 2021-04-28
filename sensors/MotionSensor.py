@@ -36,15 +36,13 @@ class MotionSensor:
 		if self._no_motion_func:
 			self._no_motion_func()
 
-	def set_motion_func(self, func):
+	def set_motion_func(self, func=None):
 		'''Function used to add an additional function call when motion is detected.'''
-		if func:
-			self._motion_func = func
+		self._motion_func = func
 
-	def set_no_motion_func(self, func):
+	def set_no_motion_func(self, func=None):
 		'''Function used to add an additional function call when no motion is detected.'''
-		if func:
-			self._no_motion_func = func
+		self._no_motion_func = func
 
 	@property
 	def motion(self):
