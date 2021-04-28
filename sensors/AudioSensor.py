@@ -34,7 +34,7 @@ class AudioSensor:
             if self._sound_func:
                 self._sound_func()
 
-    def set_sound_func(self, func):
+    def set_sound_func(self, func=None):
         '''Function used to add an additional function call when audio_callback function is run'''
         if func:
             self._sound_func = func

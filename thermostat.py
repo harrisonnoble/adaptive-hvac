@@ -150,6 +150,7 @@ class Thermostat:
         self._write_config()
 
         #delete all sensor/camera/led objects
+        self._audio_sensor.set_sound_func(None)
         del self._audio_sensor
         del self._motion_sensor
         del self._temp_sensor
