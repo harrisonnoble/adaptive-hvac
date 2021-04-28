@@ -110,6 +110,7 @@ class Thermostat:
         curr_path = os.path.dirname(os.path.realpath(__file__))
         cfg = configparser.ConfigParser(allow_no_value=True)
         try:
+            print(curr_path)
             cfg.read(curr_path + '/config.cfg')
         except:
             #error handling
@@ -136,7 +137,9 @@ class Thermostat:
         self._cfg.set('thermostat', 'fan', str(self._fan))
         self._cfg.set('thermostat', 'system', str(self._system))
 
-        with open('config.cfg', 'w') as configfile:
+        curr_path = os.path.dirname(os.path.realpath(__file__))
+        print(curr_path)
+        with open(curr_path + '/config.cfg', 'w') as configfile:
             configfile.write('; DO NOT EDIT\n')
             self._cfg.write(configfile)
     

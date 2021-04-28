@@ -166,7 +166,7 @@ class Dashboard(tk.Frame):
 
 	def _toggle_mode(self):
 		'''Function to change the mode (heat/cool) of the thermostat'''
-		if self._therm.is_on:
+		if self._therm.system == 'Manual' and self._therm.is_on:
 			self._therm.toggle_mode()
 			self.mode_stng.config(text='Heat' if self._therm.mode else 'Cool', 
 								  fg='#ff1212' if self._therm.mode else '#0062ff')
