@@ -16,3 +16,4 @@ sudo pip3 install adafruit-circuitpython-amg88xx
 sudo pip3 install colour
 sudo pip3 install imutils
 sudo apt install unclutter
+sudo chmod +x thermostat.py
